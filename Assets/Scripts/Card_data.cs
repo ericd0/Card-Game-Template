@@ -1,3 +1,4 @@
+// filepath: /Users/emonteiro6629/Documents/GitHub/Card-Game-Template/Assets/Scripts/Card_data.cs
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class Card_data : ScriptableObject
     public string description;
     public int castspeed;
     public int damage;
+    public int type;
     public GameObject projectile;
     public Sprite sprite;
-
 }

@@ -12,6 +12,8 @@ public class Card : MonoBehaviour
     public string description;
     public int castspeed;
     public int damage;
+    public int type;
+    //0 = projectile, 1 = buff,...
     public GameObject projectile;
     public Sprite sprite;
     public TextMeshProUGUI nameText;
@@ -31,7 +33,7 @@ public class Card : MonoBehaviour
         sprite = data.sprite;
         nameText.text = card_name;
         descriptionText.text = description;
-        castspeedText.text = castspeed.ToString();
+        //castspeedText.text = castspeed.ToString();
         damageText.text = damage.ToString();
         spriteImage.sprite = sprite;
     }
