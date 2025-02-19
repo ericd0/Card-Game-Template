@@ -1,7 +1,7 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework.Internal;
-using UnityEngine;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,9 +9,11 @@ public class GameManager : MonoBehaviour
     public List<Card_data> deck = new List<Card_data>();
     public List<Card_data> hand = new List<Card_data>();
     public List<Card_data> discard_pile = new List<Card_data>();
+    public int selectedCardIndex = 0;
 
-    public Deck[] startingDecks; // Array to hold multiple starting decks
-    public int selectedDeckIndex = 0; // Index to select which starting deck to use
+    public Deck[] startingDecks;
+    public int selectedDeckIndex = 0;
+    public int handSize = 7;
 
     private void Awake()
     {
@@ -25,14 +27,14 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         InitializeDeck();
         ShuffleDeck();
+        FillHand();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -43,14 +45,23 @@ public class GameManager : MonoBehaviour
         {
             PrintCardCollections();
         }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            selectedCardIndex--;
+            if (selectedCardIndex < 0)
+                selectedCardIndex = hand.Count - 1;
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            selectedCardIndex++;
+            if (selectedCardIndex >= hand.Count)
+                selectedCardIndex = 0;
+        }
     }
 
     void InitializeDeck()
     {
-        // Clear the current deck
         deck.Clear();
-
-        // Add cards to the deck from the selected starting deck
         if (startingDecks != null && startingDecks.Length > selectedDeckIndex)
         {
             foreach (Card_data card in startingDecks[selectedDeckIndex].cards)
@@ -62,20 +73,55 @@ public class GameManager : MonoBehaviour
 
     void Draw()
     {
-        if (deck.Count > 0)
+        if (deck.Count > 0 && hand.Count < handSize)
         {
             Card_data drawnCard = deck[0];
             deck.RemoveAt(0);
             hand.Add(drawnCard);
         }
-        else
+        else if (deck.Count == 0)
         {
             Debug.Log("Deck is empty!");
+        }
+        else if (hand.Count >= handSize)
+        {
+            Debug.Log("Hand is full!");
+        }
+    }
+        public void PlayCard()
+        {
+            if (hand.Count > 0)
+            {
+                // Move selected card to discard
+                Card_data selectedCard = hand[selectedCardIndex];
+                hand.RemoveAt(selectedCardIndex);
+                discard_pile.Add(selectedCard);
+
+                // Adjust selected card index if needed
+                if (selectedCardIndex >= hand.Count && hand.Count > 0)
+                {
+                    selectedCardIndex = hand.Count - 1;
+                }
+
+                // Draw new cards if possible
+                FillHand();
+            }
+        }
+    void FillHand()
+    {
+        while (hand.Count < handSize && deck.Count > 0)
+        {
+            Draw();
         }
     }
 
     void ShuffleDeck()
     {
+        // Add discard pile back to deck
+        deck.AddRange(discard_pile);
+        discard_pile.Clear();
+
+        // Shuffle the deck
         for (int i = 0; i < deck.Count; i++)
         {
             Card_data temp = deck[i];
@@ -85,25 +131,16 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log("Deck shuffled!");
     }
-
     void PrintCardCollections()
     {
-        Debug.Log("Hand:");
-        foreach (Card_data card in hand)
-        {
-            Debug.Log(card.card_name);
-        }
+        List<string> handNames = hand.Select((card, index) => 
+            index == selectedCardIndex ? $"[{card.card_name}]" : card.card_name).ToList();
+        List<string> deckNames = deck.Select(card => card.card_name).ToList();
+        List<string> discardNames = discard_pile.Select(card => card.card_name).ToList();
 
-        Debug.Log("Deck:");
-        foreach (Card_data card in deck)
-        {
-            Debug.Log(card.card_name);
-        }
-
-        Debug.Log("Discard Pile:");
-        foreach (Card_data card in discard_pile)
-        {
-            Debug.Log(card.card_name);
-        }
+        Debug.Log($"Hand ({hand.Count}): {string.Join(", ", handNames)}");
+        Debug.Log("Selected Card: " + selectedCardIndex);
+        Debug.Log($"Deck ({deck.Count}): {string.Join(", ", deckNames)}");
+        Debug.Log($"Discard ({discard_pile.Count}): {string.Join(", ", discardNames)}");
     }
 }

@@ -6,18 +6,16 @@ public class Player : MonoBehaviour
     public float moveSpeed = 4f;
     public float dashSpeed = 15f;
     public float dashDuration = 0.1f;
-    public float dashCooldown = 1f; // Cooldown duration in seconds
+    public float dashCooldown = 1f;
     private bool isDashing = false;
     private Vector3 dashDirection;
-    private float lastDashTime = -Mathf.Infinity; // Tracks the last time the player dashed
+    private float lastDashTime = -Mathf.Infinity;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!isDashing)
@@ -28,6 +26,12 @@ public class Player : MonoBehaviour
             {
                 StartCoroutine(Dash());
             }
+        }
+
+        // Check for left mouse button click
+        if (Input.GetMouseButtonDown(0))
+        {
+            PlaySelectedCard();
         }
     }
 
@@ -56,7 +60,7 @@ public class Player : MonoBehaviour
     IEnumerator Dash()
     {
         isDashing = true;
-        lastDashTime = Time.time; // Update the last dash time
+        lastDashTime = Time.time;
         float startTime = Time.time;
 
         while (Time.time < startTime + dashDuration)
@@ -66,5 +70,10 @@ public class Player : MonoBehaviour
         }
 
         isDashing = false;
+    }
+
+    void PlaySelectedCard()
+    {
+        GameManager.gm.PlayCard();
     }
 }
