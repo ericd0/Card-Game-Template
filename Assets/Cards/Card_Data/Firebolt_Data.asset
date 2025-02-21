@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card_name: Firebolt
   description: Small blast of fire
-  castspeed: 1
+  castspeed: 33
   damage: 2
-  projectile: {fileID: 0}
+  type: 0
+  projectile: {fileID: 8806555176520796744, guid: 48f49d44e315941c88946062c847aea3, type: 3}
   sprite: {fileID: 0}

@@ -10,7 +10,7 @@ public class Card : MonoBehaviour
 
     public string card_name;
     public string description;
-    public int castspeed;
+    public float castspeed;
     public int damage;
     public int type;
     //0 = projectile, 1 = buff,...

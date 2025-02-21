@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     public List<Card_data> deck = new List<Card_data>();
     public List<Card_data> hand = new List<Card_data>();
     public List<Card_data> discard_pile = new List<Card_data>();
-    public int selectedCardIndex = 0;
+    private int selectedCardIndex = 0;
+    private float cardCooldown = 0f;
 
     public Deck[] startingDecks;
     public int selectedDeckIndex = 0;
@@ -37,6 +38,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        // Update cooldown
+        if (cardCooldown > 0)
+        {
+            cardCooldown -= Time.deltaTime;
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             ShuffleDeck();
@@ -88,25 +95,61 @@ public class GameManager : MonoBehaviour
             Debug.Log("Hand is full!");
         }
     }
-        public void PlayCard()
+
+    public void PlayCard()
+    {
+        if (cardCooldown > 0)
         {
-            if (hand.Count > 0)
-            {
-                // Move selected card to discard
-                Card_data selectedCard = hand[selectedCardIndex];
-                hand.RemoveAt(selectedCardIndex);
-                discard_pile.Add(selectedCard);
-
-                // Adjust selected card index if needed
-                if (selectedCardIndex >= hand.Count && hand.Count > 0)
-                {
-                    selectedCardIndex = hand.Count - 1;
-                }
-
-                // Draw new cards if possible
-                FillHand();
-            }
+            Debug.Log($"Card on cooldown: {cardCooldown:F1} seconds remaining");
+            return;
         }
+
+        if (hand.Count > 0)
+        {
+            // Get selected card
+            Card_data selectedCard = hand[selectedCardIndex];
+
+            // Set cooldown based on card's castspeed
+            cardCooldown = selectedCard.castspeed*.01f;
+            
+            // Check if it's a projectile card
+            if (selectedCard.type == 0 && selectedCard.projectile != null)
+            {
+                // Get player position and rotation
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null)
+                {
+                    // Instantiate projectile at player position with player rotation
+                    GameObject projectile = Instantiate(selectedCard.projectile, 
+                            player.transform.position, 
+                            player.transform.rotation);
+                    Debug.Log($"Instantiated projectile: {projectile.name}");
+                }
+                else
+                {
+                    Debug.LogError("Player not found!");
+                }
+            }
+            else
+            {
+                Debug.Log("Not a projectile card or missing projectile prefab");
+            }
+
+            // Move selected card to discard
+            hand.RemoveAt(selectedCardIndex);
+            discard_pile.Add(selectedCard);
+
+            // Adjust selected card index if needed
+            if (selectedCardIndex >= hand.Count && hand.Count > 0)
+            {
+                selectedCardIndex = hand.Count - 1;
+            }
+
+            // Draw new cards if possible
+            FillHand();
+        }
+    }
+
     void FillHand()
     {
         while (hand.Count < handSize && deck.Count > 0)
@@ -129,8 +172,10 @@ public class GameManager : MonoBehaviour
             deck[i] = deck[randomIndex];
             deck[randomIndex] = temp;
         }
+        FillHand();
         Debug.Log("Deck shuffled!");
     }
+
     void PrintCardCollections()
     {
         List<string> handNames = hand.Select((card, index) => 
@@ -139,7 +184,6 @@ public class GameManager : MonoBehaviour
         List<string> discardNames = discard_pile.Select(card => card.card_name).ToList();
 
         Debug.Log($"Hand ({hand.Count}): {string.Join(", ", handNames)}");
-        Debug.Log("Selected Card: " + selectedCardIndex);
         Debug.Log($"Deck ({deck.Count}): {string.Join(", ", deckNames)}");
         Debug.Log($"Discard ({discard_pile.Count}): {string.Join(", ", discardNames)}");
     }

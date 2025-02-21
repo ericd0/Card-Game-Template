@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 direction = (mousePosition - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle - 90f));
+        transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
 
     IEnumerator Dash()
