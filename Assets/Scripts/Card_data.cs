@@ -8,8 +8,9 @@ public class Card_data : ScriptableObject
 {
     public string card_name;
     public string description;
-    public int castspeed;
-    public int damage;
+    public float castspeed;
+    public float damage;
+    public float projectileSpeed;
     public int type;
     public GameObject projectile;
     public Sprite sprite;

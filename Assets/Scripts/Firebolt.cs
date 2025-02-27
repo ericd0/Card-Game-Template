@@ -1,24 +1,15 @@
 using UnityEngine;
 
-public class Firebolt : MonoBehaviour
+public class Firebolt : Projectile
 {
-    public float speed = 10f;
-    public float lifespan = 5f;
-    private Vector3 direction;
-
-    void Start()
+    protected override void OnStart()
     {
-        // Get initial direction from rotation
         float angle = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
         direction = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
-        
-        // Destroy after lifespan
-        Destroy(gameObject, lifespan);
     }
 
-    void Update()
+    protected override void OnUpdate()
     {
-        // Move forward
         transform.position += direction * speed * Time.deltaTime;
     }
 }

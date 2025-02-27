@@ -11,7 +11,8 @@ public class Card : MonoBehaviour
     public string card_name;
     public string description;
     public float castspeed;
-    public int damage;
+    public float damage;
+    public float projectileSpeed;
     public int type;
     //0 = projectile, 1 = buff,...
     public GameObject projectile;
@@ -36,11 +37,5 @@ public class Card : MonoBehaviour
         //castspeedText.text = castspeed.ToString();
         damageText.text = damage.ToString();
         spriteImage.sprite = sprite;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

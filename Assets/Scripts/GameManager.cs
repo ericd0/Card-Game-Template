@@ -12,9 +12,20 @@ public class GameManager : MonoBehaviour
     private int selectedCardIndex = 0;
     private float cardCooldown = 0f;
 
+    // UI Related
+    public Canvas gameCanvas;
+    public GameObject blankCardPrefab;
+    private List<GameObject> cardObjects = new List<GameObject>();
+    public float cardSpacing = 150f;
+    public float bottomOffset = 100f;
+    public float selectedCardRaise = 30f;
+    public float leftEdgeOffset = 100f;
+
     public Deck[] startingDecks;
     public int selectedDeckIndex = 0;
     public int handSize = 7;
+    // Temporary slime spawn
+    public GameObject slimePrefab;
 
     private void Awake()
     {
@@ -34,11 +45,11 @@ public class GameManager : MonoBehaviour
         InitializeDeck();
         ShuffleDeck();
         FillHand();
+        UpdateHandDisplay();
     }
 
     void Update()
     {
-        // Update cooldown
         if (cardCooldown > 0)
         {
             cardCooldown -= Time.deltaTime;
@@ -57,15 +68,51 @@ public class GameManager : MonoBehaviour
             selectedCardIndex--;
             if (selectedCardIndex < 0)
                 selectedCardIndex = hand.Count - 1;
+            UpdateHandDisplay();
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
             selectedCardIndex++;
             if (selectedCardIndex >= hand.Count)
                 selectedCardIndex = 0;
+            UpdateHandDisplay();
+        }
+        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            Instantiate(slimePrefab, new Vector3(0, 0, 0), Quaternion.identity);
         }
     }
+    void UpdateHandDisplay()
+    {
+        // Clear old cards
+        foreach (GameObject card in cardObjects)
+        {
+            Destroy(card);
+        }
+        cardObjects.Clear();
 
+        float baseY = -Screen.height/2 + bottomOffset;
+        float startX = -Screen.width/2 + leftEdgeOffset;
+
+        // Create new cards
+        for (int i = 0; i < hand.Count; i++)
+        {
+            GameObject cardObj = Instantiate(blankCardPrefab, gameCanvas.transform);
+            cardObjects.Add(cardObj);
+
+            // Position card
+            float xPos = startX + (i * cardSpacing);
+            float yPos = baseY + (i == selectedCardIndex ? selectedCardRaise : 0);
+            cardObj.transform.localPosition = new Vector3(xPos, yPos, 0);
+
+            // Set card data
+            Card cardComponent = cardObj.GetComponent<Card>();
+            if (cardComponent != null)
+            {
+                cardComponent.data = hand[i];
+            }
+        }
+    }
     void InitializeDeck()
     {
         deck.Clear();
@@ -85,6 +132,7 @@ public class GameManager : MonoBehaviour
             Card_data drawnCard = deck[0];
             deck.RemoveAt(0);
             hand.Add(drawnCard);
+            UpdateHandDisplay();
         }
         else if (deck.Count == 0)
         {
@@ -106,50 +154,42 @@ public class GameManager : MonoBehaviour
 
         if (hand.Count > 0)
         {
-            // Get selected card
             Card_data selectedCard = hand[selectedCardIndex];
-
-            // Set cooldown based on card's castspeed
-            cardCooldown = selectedCard.castspeed*.01f;
+            cardCooldown = selectedCard.castspeed * 0.03f;
             
-            // Check if it's a projectile card
             if (selectedCard.type == 0 && selectedCard.projectile != null)
             {
-                // Get player position and rotation
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 if (player != null)
                 {
-                    // Instantiate projectile at player position with player rotation
-                    GameObject projectile = Instantiate(selectedCard.projectile, 
+                    GameObject projectileObj = Instantiate(selectedCard.projectile, 
                             player.transform.position, 
                             player.transform.rotation);
-                    Debug.Log($"Instantiated projectile: {projectile.name}");
+                    
+                    Projectile projectile = projectileObj.GetComponent<Projectile>();
+                    if (projectile != null)
+                    {
+                        projectile.SetStats(selectedCard);
+                    }
                 }
                 else
                 {
                     Debug.LogError("Player not found!");
                 }
             }
-            else
-            {
-                Debug.Log("Not a projectile card or missing projectile prefab");
-            }
 
-            // Move selected card to discard
             hand.RemoveAt(selectedCardIndex);
             discard_pile.Add(selectedCard);
 
-            // Adjust selected card index if needed
             if (selectedCardIndex >= hand.Count && hand.Count > 0)
             {
                 selectedCardIndex = hand.Count - 1;
             }
 
-            // Draw new cards if possible
             FillHand();
+            UpdateHandDisplay();
         }
     }
-
     void FillHand()
     {
         while (hand.Count < handSize && deck.Count > 0)
@@ -160,11 +200,9 @@ public class GameManager : MonoBehaviour
 
     void ShuffleDeck()
     {
-        // Add discard pile back to deck
         deck.AddRange(discard_pile);
         discard_pile.Clear();
 
-        // Shuffle the deck
         for (int i = 0; i < deck.Count; i++)
         {
             Card_data temp = deck[i];
@@ -173,6 +211,7 @@ public class GameManager : MonoBehaviour
             deck[randomIndex] = temp;
         }
         FillHand();
+        UpdateHandDisplay();
         Debug.Log("Deck shuffled!");
     }
 
