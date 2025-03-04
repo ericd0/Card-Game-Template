@@ -10,7 +10,7 @@ public class Card_data : ScriptableObject
     public string description;
     public float castspeed;
     public float damage;
-    public float projectileSpeed;
+    public float velocity;
     public int type;
     public GameObject projectile;
     public Sprite sprite;

@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Small blast of fire
   castspeed: 33
   damage: 50
-  projectileSpeed: 10
+  velocity: 10
   type: 0
   projectile: {fileID: 8806555176520796744, guid: 48f49d44e315941c88946062c847aea3, type: 3}
   sprite: {fileID: -5125016487584988340, guid: d6361a3a67c274c32b3d13fe454b092d, type: 3}

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,11 +21,12 @@ public class GameManager : MonoBehaviour
     public float bottomOffset = 100f;
     public float selectedCardRaise = 30f;
     public float leftEdgeOffset = 100f;
+    public TextMeshProUGUI deckCountText;
+    public TextMeshProUGUI discardCountText;
 
     public Deck[] startingDecks;
     public int selectedDeckIndex = 0;
     public int handSize = 7;
-    // Temporary slime spawn
     public GameObject slimePrefab;
 
     private void Awake()
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
         ShuffleDeck();
         FillHand();
         UpdateHandDisplay();
+        UpdateDeckUI();
     }
 
     void Update()
@@ -79,12 +82,12 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.LeftBracket))
         {
-            Instantiate(slimePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            Instantiate(slimePrefab, Vector3.zero, Quaternion.identity);
         }
     }
+
     void UpdateHandDisplay()
     {
-        // Clear old cards
         foreach (GameObject card in cardObjects)
         {
             Destroy(card);
@@ -94,18 +97,15 @@ public class GameManager : MonoBehaviour
         float baseY = -Screen.height/2 + bottomOffset;
         float startX = -Screen.width/2 + leftEdgeOffset;
 
-        // Create new cards
         for (int i = 0; i < hand.Count; i++)
         {
             GameObject cardObj = Instantiate(blankCardPrefab, gameCanvas.transform);
             cardObjects.Add(cardObj);
 
-            // Position card
             float xPos = startX + (i * cardSpacing);
             float yPos = baseY + (i == selectedCardIndex ? selectedCardRaise : 0);
             cardObj.transform.localPosition = new Vector3(xPos, yPos, 0);
 
-            // Set card data
             Card cardComponent = cardObj.GetComponent<Card>();
             if (cardComponent != null)
             {
@@ -113,6 +113,15 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    void UpdateDeckUI()
+    {
+        if (deckCountText != null)
+            deckCountText.text = $"Deck: {deck.Count}";
+        if (discardCountText != null)
+            discardCountText.text = $"Discard: {discard_pile.Count}";
+    }
+
     void InitializeDeck()
     {
         deck.Clear();
@@ -133,6 +142,7 @@ public class GameManager : MonoBehaviour
             deck.RemoveAt(0);
             hand.Add(drawnCard);
             UpdateHandDisplay();
+            UpdateDeckUI();
         }
         else if (deck.Count == 0)
         {
@@ -188,8 +198,10 @@ public class GameManager : MonoBehaviour
 
             FillHand();
             UpdateHandDisplay();
+            UpdateDeckUI();
         }
     }
+
     void FillHand()
     {
         while (hand.Count < handSize && deck.Count > 0)
@@ -212,6 +224,7 @@ public class GameManager : MonoBehaviour
         }
         FillHand();
         UpdateHandDisplay();
+        UpdateDeckUI();
         Debug.Log("Deck shuffled!");
     }
 

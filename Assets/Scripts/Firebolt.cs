@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Firebolt : Projectile
@@ -10,6 +11,10 @@ public class Firebolt : Projectile
 
     protected override void OnUpdate()
     {
-        transform.position += direction * speed * Time.deltaTime;
+        transform.position += direction * velocity * Time.deltaTime;
+    }
+    void OnTriggerEnter2D (Collider2D other)
+    {
+        Destroy(gameObject);
     }
 }

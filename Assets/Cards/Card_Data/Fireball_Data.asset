@@ -15,7 +15,8 @@ MonoBehaviour:
   card_name: Fireball
   description: Large fiery explosion.
   castspeed: 3
-  damage: 5
+  damage: 100
+  velocity: 0
   type: 1
   projectile: {fileID: 0}
   sprite: {fileID: 0}

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour
 {
-    public float speed = 0f;
+    public float velocity = 0f;
     public float lifespan = 5f;
     public float damage;
     protected Vector3 direction;
@@ -24,6 +24,6 @@ public abstract class Projectile : MonoBehaviour
     public void SetStats(Card_data cardData)
     {
         damage = cardData.damage;
-        speed = cardData.projectileSpeed;
+        velocity = cardData.velocity;
     }
 }
