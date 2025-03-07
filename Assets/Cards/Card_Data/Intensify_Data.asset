@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
-  m_Name: Fireball_Data
+  m_Name: Intensify_Data
   m_EditorClassIdentifier: 
-  card_name: Fireball
-  description: Large fiery explosion.
-  castspeed: 3
-  damage: 100
+  card_name: Intensify
+  description: Next projectile cast is stronger
+  castspeed: 10
+  damage: 0
   velocity: 0
   type: 1
+  piercing: 0
   projectile: {fileID: 0}
   sprite: {fileID: 0}

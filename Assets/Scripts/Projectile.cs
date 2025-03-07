@@ -13,6 +13,7 @@ public abstract class Projectile : MonoBehaviour
 
     void Start()
     {
+        gameObject.layer = LayerMask.NameToLayer("Projectile");
         Destroy(gameObject, lifespan);
         OnStart();
     }

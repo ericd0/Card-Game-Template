@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card_name: Chain Lighting
   description: Zap multiple targets
-  castspeed: 50
+  castspeed: 30
   damage: 75
   velocity: 0
   type: 0

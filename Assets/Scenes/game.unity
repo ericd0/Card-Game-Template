@@ -302,7 +302,7 @@ MonoBehaviour:
   gameCanvas: {fileID: 1973938349}
   blankCardPrefab: {fileID: 139944937306382617, guid: 99ef4bccd68e84d9ba6e7c8051daf70b, type: 3}
   cardSpacing: 145
-  bottomOffset: 100
+  bottomOffset: 20
   selectedCardRaise: 30
   leftEdgeOffset: -360
   deckCountText: {fileID: 934812004}

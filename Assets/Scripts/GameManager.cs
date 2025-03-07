@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
     public int selectedDeckIndex = 0;
     public int handSize = 7;
     public GameObject slimePrefab;
+    private bool isShuffling = false;
 
     private void Awake()
     {
@@ -45,7 +47,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InitializeDeck();
-        ShuffleDeck();
         FillHand();
         UpdateHandDisplay();
         UpdateDeckUI();
@@ -58,9 +59,9 @@ public class GameManager : MonoBehaviour
             cardCooldown -= Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && !isShuffling)
         {
-            ShuffleDeck();
+            StartCoroutine(ShuffleDeckCoroutine());
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -83,6 +84,10 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftBracket))
         {
             Instantiate(slimePrefab, Vector3.zero, Quaternion.identity);
+        }
+        if (Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            SceneManager.LoadScene("shop");
         }
     }
 
@@ -156,49 +161,51 @@ public class GameManager : MonoBehaviour
 
     public void PlayCard()
     {
-        if (cardCooldown > 0)
-        {
-            Debug.Log($"Card on cooldown: {cardCooldown:F1} seconds remaining");
-            return;
-        }
-
-        if (hand.Count > 0)
-        {
-            Card_data selectedCard = hand[selectedCardIndex];
-            cardCooldown = selectedCard.castspeed * 0.03f;
-            
-            if (selectedCard.type == 0 && selectedCard.projectile != null)
+        if (!isShuffling){
+            if (cardCooldown > 0)
             {
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
+                Debug.Log($"Card on cooldown: {cardCooldown:F1} seconds remaining");
+                return;
+            }
+
+            if (hand.Count > 0)
+            {
+                Card_data selectedCard = hand[selectedCardIndex];
+                cardCooldown = selectedCard.castspeed * 0.03f;
+                
+                if (selectedCard.type == 0 && selectedCard.projectile != null)
                 {
-                    GameObject projectileObj = Instantiate(selectedCard.projectile, 
-                            player.transform.position, 
-                            player.transform.rotation);
-                    
-                    Projectile projectile = projectileObj.GetComponent<Projectile>();
-                    if (projectile != null)
+                    GameObject player = GameObject.FindGameObjectWithTag("Player");
+                    if (player != null)
                     {
-                        projectile.SetStats(selectedCard);
+                        GameObject projectileObj = Instantiate(selectedCard.projectile, 
+                                player.transform.position, 
+                                player.transform.rotation);
+                        
+                        Projectile projectile = projectileObj.GetComponent<Projectile>();
+                        if (projectile != null)
+                        {
+                            projectile.SetStats(selectedCard);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("Player not found!");
                     }
                 }
-                else
+
+                hand.RemoveAt(selectedCardIndex);
+                discard_pile.Add(selectedCard);
+
+                if (selectedCardIndex >= hand.Count && hand.Count > 0)
                 {
-                    Debug.LogError("Player not found!");
+                    selectedCardIndex = hand.Count - 1;
                 }
+
+                FillHand();
+                UpdateHandDisplay();
+                UpdateDeckUI();
             }
-
-            hand.RemoveAt(selectedCardIndex);
-            discard_pile.Add(selectedCard);
-
-            if (selectedCardIndex >= hand.Count && hand.Count > 0)
-            {
-                selectedCardIndex = hand.Count - 1;
-            }
-
-            FillHand();
-            UpdateHandDisplay();
-            UpdateDeckUI();
         }
     }
 
@@ -210,11 +217,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void ShuffleDeck()
+    IEnumerator ShuffleDeckCoroutine()
     {
+        isShuffling = true;
+        Debug.Log("Started shuffling...");
+
+        // Calculate shuffle time
+        float baseTime = 1f;
+        float cardMultiplier = deck.Count * 0.02f;
+        float notEmptyMultiplier = deck.Count > 0 ? 0.1f : 0f;
+        float totalShuffleTime = baseTime + cardMultiplier + notEmptyMultiplier;
+
+        // Add discard to deck
         deck.AddRange(discard_pile);
         discard_pile.Clear();
 
+        yield return new WaitForSeconds(totalShuffleTime);
+
+        // Perform the shuffle
         for (int i = 0; i < deck.Count; i++)
         {
             Card_data temp = deck[i];
@@ -222,10 +242,12 @@ public class GameManager : MonoBehaviour
             deck[i] = deck[randomIndex];
             deck[randomIndex] = temp;
         }
+
         FillHand();
         UpdateHandDisplay();
         UpdateDeckUI();
-        Debug.Log("Deck shuffled!");
+        Debug.Log($"Deck shuffled after {totalShuffleTime:F2} seconds!");
+        isShuffling = false;
     }
 
     void PrintCardCollections()

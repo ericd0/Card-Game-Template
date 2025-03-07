@@ -7,17 +7,37 @@ public class Player : MonoBehaviour
     public float dashSpeed = 15f;
     public float dashDuration = 0.1f;
     public float dashCooldown = 1f;
+    public float maxHealth = 100f;
+    public float health;
+    private float iFrames = 0f;
+    private float regenTimer = 0f;
+    private float maxRegenTimer = 0.5f;
+    public float regen = 0.8f;
     private bool isDashing = false;
     private Vector3 dashDirection;
     private float lastDashTime = -Mathf.Infinity;
 
     void Start()
     {
-        
+        health = maxHealth;
     }
 
     void Update()
     {
+        iFrames -= Time.deltaTime;
+        regenTimer -= Time.deltaTime;
+        if (regenTimer <= 0f && health < maxHealth)
+        {
+            if (maxHealth - health < regen)
+            {
+                health = maxHealth;
+            }
+            else
+            {
+                health += regen;
+            }
+            regenTimer = maxRegenTimer;
+        }
         if (!isDashing)
         {
             Move();
@@ -76,4 +96,17 @@ public class Player : MonoBehaviour
     {
         GameManager.gm.PlayCard();
     }
-}
+    void OnCollisionStay2D(Collision2D other)
+    {
+        if(other.gameObject.CompareTag("Enemy")&& iFrames <= 0f)
+        {
+            if (other.gameObject.GetComponent<Enemy>().collisionDamage==true)
+            {
+            health -= other.gameObject.GetComponent<Enemy>().damage;
+            Debug.Log("Player hit! Health: " + health);
+            iFrames = 1f;
+            }
+        }
+    }
+} 
+    

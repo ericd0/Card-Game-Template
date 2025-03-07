@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class Enemy : MonoBehaviour
 {
     public float health = 100f;
+    public bool collisionDamage;
+    public float damage = 10f;
     private HashSet<GameObject> hitByProjectiles = new HashSet<GameObject>();
 
     void OnTriggerEnter2D(Collider2D other)

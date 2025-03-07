@@ -7,10 +7,13 @@ public class Slime : MonoBehaviour
     public float rotateSpeed = 2f;
     private Vector3 moveDirection;
     private GameObject player;
+    private Rigidbody2D rb;
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         moveDirection = Vector3.right;
+        rb = GetComponent<Rigidbody2D>();
+        rb.freezeRotation = true;
     }
 
     void Update()
