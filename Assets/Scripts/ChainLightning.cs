@@ -1,44 +1,57 @@
 using UnityEngine;
+using System.Collections.Generic;
 //very wip
-//TODO: actually make art and prefab and then test
+//TODO: actually prefab and then test
 public class ChainLightning : Projectile
 {
     public int chains = 3;
-    public float range = 5f;
+    public float range = 8f;
     private GameObject currentTarget;
-
+    private static HashSet<GameObject> chainHitEnemies = new HashSet<GameObject>();
+    private bool hasChained = false;
     protected override void OnStart()
     {
-        // Find closest enemy if no target
-        if (currentTarget == null)
+        lifespan = 0.5f;
+        
+        // Find closest enemy and chain immediately if found
+        FindNextTarget();
+        if (currentTarget != null && !hasChained)
         {
-            FindNextTarget();
+            Chain();
         }
 
         // Calculate direction to target
         if (currentTarget != null)
         {
             direction = (currentTarget.transform.position - transform.position).normalized;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
         }
         else
         {
-            // Default direction if no target (forward)
             float angle = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
             direction = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
         }
     }
-
     protected override void OnUpdate()
     {
-        transform.position += direction * velocity * Time.deltaTime;
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Enemy") && chains > 0)
+        if (lifespan <= 0f)
         {
-            // Spawn next chain
-            GameObject nextChain = Instantiate(gameObject, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+        }
+        lifespan -= Time.deltaTime;
+    }
+    private void Chain()
+    {
+        if (chains > 0 && currentTarget != null && !hasChained)
+        {
+            hasChained = true;
+            
+            // Calculate spawn position in front of the current target
+            Vector3 directionToTarget = (currentTarget.transform.position - transform.position).normalized;
+            Vector3 spawnPosition = currentTarget.transform.position + directionToTarget * 0.5f;
+            
+            GameObject nextChain = Instantiate(gameObject, spawnPosition, transform.rotation);
             ChainLightning nextLightning = nextChain.GetComponent<ChainLightning>();
             if (nextLightning != null)
             {
@@ -49,16 +62,34 @@ public class ChainLightning : Projectile
                 nextLightning.lifespan = lifespan;
             }
         }
-        Destroy(gameObject);
+    }
+    protected override bool CanHitEnemy(GameObject enemy)
+    {
+        return !chainHitEnemies.Contains(enemy);
     }
 
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Enemy") && CanHitEnemy(other.gameObject))
+        {
+            chainHitEnemies.Add(other.gameObject);
+            FindNextTarget();
+            if (currentTarget != null && !hasChained)
+            {
+                Chain();
+            }
+        }
+    }
     void FindNextTarget()
     {
         float closestDistance = range;
+        currentTarget = null;
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         
         foreach (GameObject enemy in enemies)
         {
+            if (chainHitEnemies.Contains(enemy)) continue;
+            
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
             if (distance < closestDistance)
             {
@@ -66,5 +97,10 @@ public class ChainLightning : Projectile
                 currentTarget = enemy;
             }
         }
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, range);
     }
 }

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
-  m_Name: Firebolt_Data
+  m_Name: Chain_Lightning
   m_EditorClassIdentifier: 
-  card_name: Firebolt
-  description: Small blast of fire
-  castspeed: 15
-  damage: 50
-  velocity: 10
+  card_name: Chain Lighting
+  description: Zap multiple targets
+  castspeed: 50
+  damage: 75
+  velocity: 0
   type: 0
-  piercing: 0
-  projectile: {fileID: 8806555176520796744, guid: 48f49d44e315941c88946062c847aea3, type: 3}
-  sprite: {fileID: -5125016487584988340, guid: d6361a3a67c274c32b3d13fe454b092d, type: 3}
+  piercing: 1
+  projectile: {fileID: 1043217454965344401, guid: a6829ac86113f84d989bc78b1458e1a8, type: 3}
+  sprite: {fileID: -2983090718515566234, guid: 2d27640d75a569b1f97892646c88927e, type: 3}

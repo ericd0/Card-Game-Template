@@ -2,10 +2,14 @@ using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour
 {
-    public float velocity = 0f;
-    public float lifespan = 5f;
+    public float velocity;
+    public float lifespan;
     public float damage;
     protected Vector3 direction;
+    protected virtual bool CanHitEnemy(GameObject enemy)
+    {
+        return true;
+    }
 
     void Start()
     {
@@ -25,5 +29,13 @@ public abstract class Projectile : MonoBehaviour
     {
         damage = cardData.damage;
         velocity = cardData.velocity;
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Enemy") && CanHitEnemy(other.gameObject))
+        {
+            // Process the hit
+            // ...existing collision code...
+        }
     }
 }

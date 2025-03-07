@@ -12,6 +12,7 @@ public class Card_data : ScriptableObject
     public float damage;
     public float velocity;
     public int type;
+    public int piercing;
     public GameObject projectile;
     public Sprite sprite;
 }

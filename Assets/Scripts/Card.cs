@@ -15,6 +15,7 @@ public class Card : MonoBehaviour
     public float projectileSpeed;
     public int type;
     //0 = projectile, 1 = buff,...
+    public int piercing;
     public GameObject projectile;
     public Sprite sprite;
     public TextMeshProUGUI nameText;
