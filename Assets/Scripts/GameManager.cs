@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager gm;
+    public static event System.Action<Projectile> OnProjectileCast;
     public List<Card_data> deck = new List<Card_data>();
     public List<Card_data> hand = new List<Card_data>();
     public List<Card_data> discard_pile = new List<Card_data>();
@@ -161,7 +162,8 @@ public class GameManager : MonoBehaviour
 
     public void PlayCard()
     {
-        if (!isShuffling){
+        if (!isShuffling)
+        {
             if (cardCooldown > 0)
             {
                 Debug.Log($"Card on cooldown: {cardCooldown:F1} seconds remaining");
@@ -173,25 +175,42 @@ public class GameManager : MonoBehaviour
                 Card_data selectedCard = hand[selectedCardIndex];
                 cardCooldown = selectedCard.castspeed * 0.03f;
                 
-                if (selectedCard.type == 0 && selectedCard.projectile != null)
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                if (player == null)
                 {
-                    GameObject player = GameObject.FindGameObjectWithTag("Player");
-                    if (player != null)
-                    {
-                        GameObject projectileObj = Instantiate(selectedCard.projectile, 
+                    Debug.LogError("Player not found!");
+                    return;
+                }
+
+                switch (selectedCard.type)
+                {
+                    case 0: // Projectile card
+                        if (selectedCard.projectile != null)
+                        {
+                            GameObject projectileObj = Instantiate(selectedCard.projectile, 
                                 player.transform.position, 
                                 player.transform.rotation);
-                        
-                        Projectile projectile = projectileObj.GetComponent<Projectile>();
-                        if (projectile != null)
-                        {
-                            projectile.SetStats(selectedCard);
+                            
+                            Projectile projectile = projectileObj.GetComponent<Projectile>();
+                            if (projectile != null)
+                            {
+                                projectile.SetStats(selectedCard);
+                                OnProjectileCast?.Invoke(projectile);
+                            }
                         }
-                    }
-                    else
-                    {
-                        Debug.LogError("Player not found!");
-                    }
+                        break;
+
+                    case 1: // Buff card
+                        if (selectedCard.buffEffect != null)
+                        {
+                            BuffEffect buffInstance = Instantiate(selectedCard.buffEffect);
+                            buffInstance.Apply(player);
+                        }
+                        break;
+
+                    default:
+                        Debug.LogWarning($"Unhandled card type: {selectedCard.type}");
+                        break;
                 }
 
                 hand.RemoveAt(selectedCardIndex);

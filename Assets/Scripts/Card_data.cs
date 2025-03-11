@@ -14,5 +14,6 @@ public class Card_data : ScriptableObject
     public int type;
     public int piercing;
     public GameObject projectile;
+    public BuffEffect buffEffect;
     public Sprite sprite;
 }
