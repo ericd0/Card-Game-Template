@@ -9,15 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
-  m_Name: Firebolt_Data
+  m_Script: {fileID: 11500000, guid: 3f809983f850a01828e0b964f5d45a8b, type: 3}
+  m_Name: Firebolt_data
   m_EditorClassIdentifier: 
   card_name: Firebolt
   description: Small blast of fire
   castspeed: 15
+  sprite: {fileID: -5125016487584988340, guid: d6361a3a67c274c32b3d13fe454b092d, type: 3}
   damage: 50
   velocity: 10
-  type: 0
   piercing: 0
   projectile: {fileID: 8806555176520796744, guid: 48f49d44e315941c88946062c847aea3, type: 3}
-  sprite: {fileID: -5125016487584988340, guid: d6361a3a67c274c32b3d13fe454b092d, type: 3}

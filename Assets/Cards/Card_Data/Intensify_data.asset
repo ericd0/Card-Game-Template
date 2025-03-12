@@ -9,15 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c025b4487bfbb41fca186c7d9d6e18a5, type: 3}
-  m_Name: Intensify_Data
+  m_Script: {fileID: 11500000, guid: 25d3ae5ad44e959278ca1b5d3273a22e, type: 3}
+  m_Name: Intensify_data
   m_EditorClassIdentifier: 
   card_name: Intensify
-  description: Next projectile cast is stronger
+  description: Next projectile played is stronger
   castspeed: 10
-  damage: 0
-  velocity: 0
-  type: 1
-  piercing: 0
-  projectile: {fileID: 0}
   sprite: {fileID: 0}
+  buffEffect: {fileID: 8423673085137984993, guid: 31628a5ac2a868282b339a59ba2e3a2d, type: 3}

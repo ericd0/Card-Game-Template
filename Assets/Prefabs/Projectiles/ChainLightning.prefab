@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 122655096509428814}
   - component: {fileID: 5698178739501431887}
   - component: {fileID: 2248167719333379619}
-  - component: {fileID: -4471063913003113952}
+  - component: {fileID: 2062433575058634277}
   m_Layer: 0
   m_Name: ChainLightning
   m_TagString: PlayerProjectile
@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: 0
-  lifespan: 0.3
+  lifespan: 1
   damage: 0
   chains: 3
   range: 6
@@ -136,8 +136,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &-4471063913003113952
-BoxCollider2D:
+--- !u!58 &2062433575058634277
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -171,14 +171,4 @@ BoxCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.56, y: 0.32}
-    newSize: {x: 0.256, y: 0.032}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 2.56, y: 0.32}
-  m_EdgeRadius: 0
+  m_Radius: 4

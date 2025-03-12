@@ -94,9 +94,20 @@ public class ChainLightning : Projectile
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, range);
     }
-
-    protected override bool CanHitEnemy(GameObject enemy)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        return !chainHitEnemies.Contains(enemy);
+        if (other.gameObject.CompareTag("Enemy") && !chainHitEnemies.Contains(other.gameObject))
+        {
+            chainHitEnemies.Add(other.gameObject);
+            Enemy enemy = other.gameObject.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.health -= damage;
+                if (enemy.health <= 0)
+                {
+                    Destroy(other.gameObject);
+                }
+            }
+        }
     }
 }

@@ -6,10 +6,6 @@ public abstract class Projectile : MonoBehaviour
     public float lifespan;
     public float damage;
     protected Vector3 direction;
-    protected virtual bool CanHitEnemy(GameObject enemy)
-    {
-        return true;
-    }
 
     void Start()
     {
@@ -28,12 +24,20 @@ public abstract class Projectile : MonoBehaviour
 
     public void SetStats(Card_data cardData)
     {
-        damage = cardData.damage;
-        velocity = cardData.velocity;
+        if (cardData is ProjectileCard_data projectileData)
+        {
+            damage = projectileData.damage;
+            velocity = projectileData.velocity;
+        }
+        else
+        {
+            Debug.LogError($"Tried to set projectile stats with non-projectile card: {cardData.GetType()}");
+        }
     }
+
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy") && CanHitEnemy(other.gameObject))
+        if (other.CompareTag("Enemy"))
         {
             // Process the hit
             // ...existing collision code...

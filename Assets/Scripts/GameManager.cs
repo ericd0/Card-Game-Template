@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InitializeDeck();
+        RandomizeDeck();
         FillHand();
         UpdateHandDisplay();
         UpdateDeckUI();
@@ -182,35 +183,34 @@ public class GameManager : MonoBehaviour
                     return;
                 }
 
-                switch (selectedCard.type)
+                // Handle different card types using 'is' operator
+                if (selectedCard is ProjectileCard_data projectileData)
                 {
-                    case 0: // Projectile card
-                        if (selectedCard.projectile != null)
+                    if (projectileData.projectile != null)
+                    {
+                        GameObject projectileObj = Instantiate(projectileData.projectile, 
+                            player.transform.position, 
+                            player.transform.rotation);
+                        
+                        Projectile projectile = projectileObj.GetComponent<Projectile>();
+                        if (projectile != null)
                         {
-                            GameObject projectileObj = Instantiate(selectedCard.projectile, 
-                                player.transform.position, 
-                                player.transform.rotation);
-                            
-                            Projectile projectile = projectileObj.GetComponent<Projectile>();
-                            if (projectile != null)
-                            {
-                                projectile.SetStats(selectedCard);
-                                OnProjectileCast?.Invoke(projectile);
-                            }
+                            projectile.SetStats(projectileData);
+                            OnProjectileCast?.Invoke(projectile);
                         }
-                        break;
-
-                    case 1: // Buff card
-                        if (selectedCard.buffEffect != null)
-                        {
-                            BuffEffect buffInstance = Instantiate(selectedCard.buffEffect);
-                            buffInstance.Apply(player);
-                        }
-                        break;
-
-                    default:
-                        Debug.LogWarning($"Unhandled card type: {selectedCard.type}");
-                        break;
+                    }
+                }
+                else if (selectedCard is BuffCard_data buffData)
+                {
+                    if (buffData.buffEffect != null)
+                    {
+                        BuffEffect buffInstance = Instantiate(buffData.buffEffect);
+                        buffInstance.Apply(player);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"Unhandled card type: {selectedCard.GetType()}");
                 }
 
                 hand.RemoveAt(selectedCardIndex);
@@ -235,6 +235,19 @@ public class GameManager : MonoBehaviour
             Draw();
         }
     }
+    void RandomizeDeck()
+    {
+        deck.AddRange(discard_pile);
+        discard_pile.Clear();
+
+        for (int i = 0; i < deck.Count; i++)
+        {
+            Card_data temp = deck[i];
+            int randomIndex = Random.Range(i, deck.Count);
+            deck[i] = deck[randomIndex];
+            deck[randomIndex] = temp;
+        }
+    }
 
     IEnumerator ShuffleDeckCoroutine()
     {
@@ -246,21 +259,10 @@ public class GameManager : MonoBehaviour
         float cardMultiplier = deck.Count * 0.02f;
         float notEmptyMultiplier = deck.Count > 0 ? 0.1f : 0f;
         float totalShuffleTime = baseTime + cardMultiplier + notEmptyMultiplier;
-
-        // Add discard to deck
-        deck.AddRange(discard_pile);
-        discard_pile.Clear();
-
         yield return new WaitForSeconds(totalShuffleTime);
 
         // Perform the shuffle
-        for (int i = 0; i < deck.Count; i++)
-        {
-            Card_data temp = deck[i];
-            int randomIndex = Random.Range(i, deck.Count);
-            deck[i] = deck[randomIndex];
-            deck[randomIndex] = temp;
-        }
+        RandomizeDeck();
 
         FillHand();
         UpdateHandDisplay();

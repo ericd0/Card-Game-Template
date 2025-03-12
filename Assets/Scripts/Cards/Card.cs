@@ -17,6 +17,7 @@ public class Card : MonoBehaviour
     //0 = projectile, 1 = buff,...
     public int piercing;
     public GameObject projectile;
+    public BuffEffect buffEffect;
     public Sprite sprite;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI descriptionText;
@@ -28,15 +29,42 @@ public class Card : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Set common properties
         card_name = data.card_name;
         description = data.description;
         castspeed = data.castspeed;
-        damage = data.damage;
         sprite = data.sprite;
+
+        // Set type-specific properties
+        if (data is ProjectileCard_data projectileData)
+        {
+            damage = projectileData.damage;
+            projectileSpeed = projectileData.velocity;
+            piercing = projectileData.piercing;
+            projectile = projectileData.projectile;
+        }
+        else if (data is BuffCard_data buffData)
+        {
+            buffEffect = buffData.buffEffect;
+        }
+
+        // Update UI
+        UpdateUI();
+    }
+
+    void UpdateUI()
+    {
         nameText.text = card_name;
         descriptionText.text = description;
-        //castspeedText.text = castspeed.ToString();
-        damageText.text = damage.ToString();
         spriteImage.sprite = sprite;
+        
+        if (data is ProjectileCard_data)
+        {
+            damageText.text = damage.ToString();
+        }
+        else
+        {
+            damageText.gameObject.SetActive(false);
+        }
     }
 }
