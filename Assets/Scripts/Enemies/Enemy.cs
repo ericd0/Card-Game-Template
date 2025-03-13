@@ -1,19 +1,27 @@
-using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
-    public float health = 100f;
+    public float health;
     public bool collisionDamage;
-    public float damage = 10f;
-    private HashSet<GameObject> hitByProjectiles = new HashSet<GameObject>();
+    public float damage;
+    protected HashSet<GameObject> hitByProjectiles = new HashSet<GameObject>();
 
-    void OnTriggerEnter2D(Collider2D other)
+    protected virtual void Start()
+    {
+        // Base initialization if needed
+    }
+
+    protected virtual void Update()
+    {
+        // Base update logic if needed
+    }
+
+    protected void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("PlayerProjectile"))
         {
-            // Check if this projectile has already hit this enemy
             if (hitByProjectiles.Contains(other.gameObject))
             {
                 return;
@@ -24,12 +32,23 @@ public class Enemy : MonoBehaviour
             {
                 hitByProjectiles.Add(other.gameObject);
                 health -= projectile.damage;
-                Debug.Log("Enemy hit! Health: " + health);
+                OnTakeDamage(projectile.damage);
+                
                 if (health <= 0)
                 {
-                    Destroy(gameObject);
+                    Die();
                 }
             }
         }
+    }
+
+    protected virtual void OnTakeDamage(float damage)
+    {
+        Debug.Log($"{gameObject.name} hit! Health: {health}");
+    }
+
+    protected virtual void Die()
+    {
+        Destroy(gameObject);
     }
 }

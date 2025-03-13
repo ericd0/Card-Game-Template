@@ -197,8 +197,8 @@ GameObject:
   - component: {fileID: 740367705}
   - component: {fileID: 740367704}
   - component: {fileID: 740367703}
-  - component: {fileID: 740367706}
   - component: {fileID: 740367708}
+  - component: {fileID: 740367709}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -284,7 +284,15 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &740367706
+--- !u!222 &740367708
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740367702}
+  m_CullTransparentMesh: 1
+--- !u!114 &740367709
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -301,10 +309,10 @@ MonoBehaviour:
   discard_pile: []
   gameCanvas: {fileID: 1973938349}
   blankCardPrefab: {fileID: 139944937306382617, guid: 99ef4bccd68e84d9ba6e7c8051daf70b, type: 3}
-  cardSpacing: 145
+  cardSpacing: 160
   bottomOffset: 20
   selectedCardRaise: 30
-  leftEdgeOffset: -360
+  leftEdgeOffset: -340
   deckCountText: {fileID: 934812004}
   discardCountText: {fileID: 904722941}
   startingDecks:
@@ -312,14 +320,6 @@ MonoBehaviour:
   selectedDeckIndex: 0
   handSize: 6
   slimePrefab: {fileID: 4093534973121695392, guid: 623ac1de69afc4b7db34538cb6aab3da, type: 3}
---- !u!222 &740367708
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 740367702}
-  m_CullTransparentMesh: 1
 --- !u!1 &904722939
 GameObject:
   m_ObjectHideFlags: 0
