@@ -101,8 +101,12 @@ public class GameManager : MonoBehaviour
         }
         cardObjects.Clear();
 
-        float baseY = -Screen.height/2 + bottomOffset;
-        float startX = -Screen.width/2 + leftEdgeOffset;
+        RectTransform canvasRect = gameCanvas.GetComponent<RectTransform>();
+        float canvasHeight = canvasRect.rect.height;
+        float canvasWidth = canvasRect.rect.width;
+
+        float baseY = (-canvasHeight/2) + bottomOffset;
+        float startX = (-canvasWidth/2) + leftEdgeOffset;
 
         for (int i = 0; i < hand.Count; i++)
         {
