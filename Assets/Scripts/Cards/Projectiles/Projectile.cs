@@ -1,11 +1,15 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class Projectile : MonoBehaviour
 {
     public float velocity;
     public float lifespan;
     public float damage;
+    public int piercing;
+    public bool repeatPiercing;
     protected Vector3 direction;
+    protected HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
 
     void Start()
     {
@@ -28,6 +32,13 @@ public abstract class Projectile : MonoBehaviour
         {
             damage = projectileData.damage;
             velocity = projectileData.velocity;
+            piercing = projectileData.piercing;
+            repeatPiercing = projectileData.repeatPiercing;
+            if (piercing >= 0)
+            {
+                //Piercing at 0 makes it hit nothing, so we add 1 to make it hit at least once
+                piercing += 1;
+            }
         }
         else
         {
@@ -35,12 +46,51 @@ public abstract class Projectile : MonoBehaviour
         }
     }
 
+    public virtual bool CanHitEnemy(GameObject enemy)
+    {
+        // Can't hit if already hit and not using repeat piercing
+        if (!repeatPiercing && hitEnemies.Contains(enemy))
+        {
+            return false;
+        }
+
+        // Can't hit if out of pierces (unless negative for infinite)
+        if (piercing == 0)
+        {
+            Destroy(gameObject);
+            return false;
+        }
+
+        return true;
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Enemy"))
         {
-            // Process the hit
-            // ...existing collision code...
+            if (!CanHitEnemy(other.gameObject))
+            {
+                return;
+            }
+
+            Enemy enemy = other.gameObject.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.health -= damage;
+                enemy.OnTakeDamage(damage);
+            }
+
+            hitEnemies.Add(other.gameObject);
+            
+            // Reduce piercing if not infinite (negative)
+            if (piercing > 0)
+            {
+                piercing--;
+                if (piercing == 0)
+                {
+                    Destroy(gameObject);
+                }
+            }
         }
     }
 }

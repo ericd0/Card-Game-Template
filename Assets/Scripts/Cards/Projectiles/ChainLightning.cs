@@ -13,38 +13,39 @@ public class ChainLightning : Projectile
     private static HashSet<GameObject> chainHitEnemies = new HashSet<GameObject>();
     private float currentLifespan;
 
-        protected override void OnStart()
-        {
-            lightningLines = new List<LineRenderer>();
-            Vector3 currentPos = transform.position;
+    protected override void OnStart()
+    {
+        lightningLines = new List<LineRenderer>();
+        Vector3 currentPos = transform.position;
 
-            // Create and setup all chain segments
-            for (int i = 0; i < chains; i++)
+        for (int i = 0; i < chains; i++)
+        {
+            GameObject lineObj = new GameObject($"LightningLine_{i}");
+            lineObj.transform.SetParent(transform);
+            LineRenderer line = lineObj.AddComponent<LineRenderer>();
+            SetupLineRenderer(line);
+            
+            GameObject target = FindNextTarget(currentPos, chainHitEnemies);
+            if (target != null)
             {
-                GameObject lineObj = new GameObject($"LightningLine_{i}");
-                lineObj.transform.SetParent(transform);
-                LineRenderer line = lineObj.AddComponent<LineRenderer>();
-                SetupLineRenderer(line);
+                Vector3 endPos = target.transform.position;
+                line.SetPosition(0, currentPos);
+                line.SetPosition(1, endPos);
+                chainHitEnemies.Add(target); // This only affects chain targeting
+                currentPos = endPos;
                 
-                GameObject target = FindNextTarget(currentPos, chainHitEnemies);
-                if (target != null)
-                {
-                    Vector3 endPos = target.transform.position;
-                    line.SetPosition(0, currentPos);
-                    line.SetPosition(1, endPos);
-                    chainHitEnemies.Add(target);
-                    currentPos = endPos;
-                }
-                else
-                {
-                    // No target found - hide this line
-                    line.SetPosition(0, Vector3.zero);
-                    line.SetPosition(1, Vector3.zero);
-                }
-                
-                lightningLines.Add(line);
+                // Add edge collider for this segment
+                CreateColliderForLine(line, lineObj);
             }
+            else
+            {
+                line.SetPosition(0, Vector3.zero);
+                line.SetPosition(1, Vector3.zero);
+            }
+            
+            lightningLines.Add(line);
         }
+    }
 
     private void SetupLineRenderer(LineRenderer line)
     {
@@ -54,6 +55,21 @@ public class ChainLightning : Projectile
         line.startColor = lightningColor;
         line.endColor = lightningColor;
         line.positionCount = 2;
+    }
+
+    private void CreateColliderForLine(LineRenderer line, GameObject lineObj)
+    {
+        EdgeCollider2D edgeCollider = lineObj.AddComponent<EdgeCollider2D>();
+        Vector3[] linePositions = new Vector3[2];
+        line.GetPositions(linePositions);
+        
+        // Convert world positions to local positions for the edge collider
+        Vector2[] colliderPoints = new Vector2[2];
+        colliderPoints[0] = lineObj.transform.InverseTransformPoint(linePositions[0]);
+        colliderPoints[1] = lineObj.transform.InverseTransformPoint(linePositions[1]);
+        
+        edgeCollider.points = colliderPoints;
+        edgeCollider.isTrigger = true;
     }
 
     protected override void OnUpdate()
@@ -93,21 +109,5 @@ public class ChainLightning : Projectile
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, range);
-    }
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Enemy") && !chainHitEnemies.Contains(other.gameObject))
-        {
-            chainHitEnemies.Add(other.gameObject);
-            Enemy enemy = other.gameObject.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.health -= damage;
-                if (enemy.health <= 0)
-                {
-                    Destroy(other.gameObject);
-                }
-            }
-        }
     }
 }

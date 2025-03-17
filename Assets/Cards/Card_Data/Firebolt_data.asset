@@ -19,4 +19,5 @@ MonoBehaviour:
   damage: 50
   velocity: 10
   piercing: 0
+  repeatPiercing: 0
   projectile: {fileID: 8806555176520796744, guid: 48f49d44e315941c88946062c847aea3, type: 3}

@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     private float cardCooldown = 0f;
 
     // UI Related
-    public Canvas gameCanvas;
+    private Canvas gameCanvas;
     public GameObject blankCardPrefab;
     private List<GameObject> cardObjects = new List<GameObject>();
     public float cardSpacing = 150f;
@@ -47,6 +47,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        gameCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
+        if (gameCanvas == null)
+        {
+            Debug.LogError("Main canvas not found! Make sure it's tagged as 'MainCanvas'");
+            return;
+        }
+
         InitializeDeck();
         RandomizeDeck();
         FillHand();

@@ -307,7 +307,6 @@ MonoBehaviour:
   deck: []
   hand: []
   discard_pile: []
-  gameCanvas: {fileID: 1973938349}
   blankCardPrefab: {fileID: 139944937306382617, guid: 99ef4bccd68e84d9ba6e7c8051daf70b, type: 3}
   cardSpacing: 160
   bottomOffset: 20

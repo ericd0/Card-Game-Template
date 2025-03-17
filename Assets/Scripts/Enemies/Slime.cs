@@ -28,7 +28,7 @@ public class Slime : Enemy
         }
     }
 
-    protected override void OnTakeDamage(float damage)
+    public override void OnTakeDamage(float damage)
     {
         base.OnTakeDamage(damage);
         // Add slime-specific damage reactions here

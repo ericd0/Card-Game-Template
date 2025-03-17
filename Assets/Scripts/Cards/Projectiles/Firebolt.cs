@@ -13,8 +13,4 @@ public class Firebolt : Projectile
     {
         transform.position += direction * velocity * Time.deltaTime;
     }
-    void OnTriggerEnter2D (Collider2D other)
-    {
-        Destroy(gameObject);
-    }
 }

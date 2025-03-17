@@ -9,7 +9,6 @@ public abstract class Enemy : MonoBehaviour
     public bool collisionDamage;
     public float damage;
     public GameObject healthBarPrefab;  // Assign the HealthBarCanvas prefab
-    protected HashSet<GameObject> hitByProjectiles = new HashSet<GameObject>();
     
     private GameObject healthBarInstance;
     private Image healthFill;
@@ -57,36 +56,17 @@ public abstract class Enemy : MonoBehaviour
         }
         Destroy(gameObject);
     }
-    protected virtual void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("PlayerProjectile"))
-        {
-            if (hitByProjectiles.Contains(other.gameObject))
-            {
-                return;
-            }
-
-            Projectile projectile = other.gameObject.GetComponent<Projectile>();
-            if (projectile != null)
-            {
-                hitByProjectiles.Add(other.gameObject);
-                health -= projectile.damage;
-                OnTakeDamage(projectile.damage);  // This calls the health bar update
-                
-                if (health <= 0)
-                {
-                    Die();
-                }
-            }
-        }
-    }
-    protected virtual void OnTakeDamage(float damage)
+    public virtual void OnTakeDamage(float damage)
     {
         if (healthFill != null)
         {
             // Update fill amount based on current health percentage
             healthFill.fillAmount = Mathf.Clamp01(health / maxHealth);
         }
+        if (health <= 0)
+                {
+                    Die();
+                }
         Debug.Log($"{gameObject.name} hit! Health: {health}");
     }
 }
