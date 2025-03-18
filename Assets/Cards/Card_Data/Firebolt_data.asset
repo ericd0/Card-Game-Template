@@ -17,7 +17,7 @@ MonoBehaviour:
   castspeed: 15
   sprite: {fileID: -5125016487584988340, guid: d6361a3a67c274c32b3d13fe454b092d, type: 3}
   damage: 50
-  velocity: 10
-  piercing: 0
+  velocity: 7.2
+  piercing: 2
   repeatPiercing: 0
   projectile: {fileID: 8806555176520796744, guid: 48f49d44e315941c88946062c847aea3, type: 3}

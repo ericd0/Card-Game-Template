@@ -311,7 +311,7 @@ MonoBehaviour:
   cardSpacing: 160
   bottomOffset: 20
   selectedCardRaise: 30
-  leftEdgeOffset: -340
+  leftEdgeOffset: 100
   deckCountText: {fileID: 934812004}
   discardCountText: {fileID: 904722941}
   startingDecks:

@@ -1,11 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class ChainLightning : Projectile
 {
     public int chains = 4;
     public float range = 8f;
     public float lineWidth = 0.1f;
+    public float chainDelay = 0.1f; // Add delay between chains
     public Color lightningColor = Color.cyan;
     
     private List<LineRenderer> lightningLines;
@@ -16,6 +18,11 @@ public class ChainLightning : Projectile
     protected override void OnStart()
     {
         lightningLines = new List<LineRenderer>();
+        StartCoroutine(CreateChains());
+    }
+
+    private IEnumerator CreateChains()
+    {
         Vector3 currentPos = transform.position;
 
         for (int i = 0; i < chains; i++)
@@ -31,10 +38,9 @@ public class ChainLightning : Projectile
                 Vector3 endPos = target.transform.position;
                 line.SetPosition(0, currentPos);
                 line.SetPosition(1, endPos);
-                chainHitEnemies.Add(target); // This only affects chain targeting
+                chainHitEnemies.Add(target);
                 currentPos = endPos;
                 
-                // Add edge collider for this segment
                 CreateColliderForLine(line, lineObj);
             }
             else
@@ -44,6 +50,11 @@ public class ChainLightning : Projectile
             }
             
             lightningLines.Add(line);
+
+            if (i < chains - 1) // Don't delay after the last chain
+            {
+                yield return new WaitForSeconds(chainDelay);
+            }
         }
     }
 
