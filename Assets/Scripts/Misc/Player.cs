@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -9,22 +10,48 @@ public class Player : MonoBehaviour
     public float dashCooldown = 1f;
     public float maxHealth = 100f;
     public float health;
-    private float iFrames = 0f;
     private float regenTimer = 0f;
-    private float maxRegenTimer = 0.5f;
+    private float maxRegenTimer = 1f;
     public float regen = 0.8f;
     private bool isDashing = false;
     private Vector3 dashDirection;
     private float lastDashTime = -Mathf.Infinity;
+    private Canvas gameCanvas;
+    public GameObject healthBar;
+    private Image healthFill;
 
     void Start()
     {
         health = maxHealth;
+        gameCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
+        InitializeHealthBar();
+    }
+
+    private void InitializeHealthBar()
+    {
+        if (gameCanvas == null)
+        {
+            Debug.LogError("Main canvas not found! Make sure it's tagged as 'MainCanvas'");
+            return;
+        }
+
+        healthBar = Instantiate(healthBar, gameCanvas.transform);
+        RectTransform healthBarRect = healthBar.GetComponent<RectTransform>();
+        healthFill = healthBar.GetComponentsInChildren<Image>()[1]; // Get the fill image
+
+        // Position at bottom left with some padding
+        float padding = 20f;
+        healthBarRect.anchorMin = new Vector2(0, 0);
+        healthBarRect.anchorMax = new Vector2(0, 0);
+        healthBarRect.pivot = new Vector2(0, 0);
+        healthBarRect.anchoredPosition = new Vector2(padding, padding);
+
+        // Set initial size
+        healthBarRect.sizeDelta = new Vector2(200, 20); // Width and height of health bar
     }
 
     void Update()
     {
-        iFrames -= Time.deltaTime;
         regenTimer -= Time.deltaTime;
         if (regenTimer <= 0f && health < maxHealth)
         {
@@ -52,6 +79,24 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             PlaySelectedCard();
+        }
+
+        UpdateHealthBar();
+    }
+
+    private void UpdateHealthBar()
+    {
+        if (healthFill != null)
+        {
+            healthFill.fillAmount = Mathf.Clamp01(health / maxHealth);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (healthBar != null)
+        {
+            Destroy(healthBar);
         }
     }
 
@@ -96,17 +141,9 @@ public class Player : MonoBehaviour
     {
         GameManager.gm.PlayCard();
     }
-    void OnCollisionStay2D(Collision2D other)
+    public void TakeDamage(float damage)
     {
-        if(other.gameObject.CompareTag("Enemy")&& iFrames <= 0f)
-        {
-            if (other.gameObject.GetComponent<Enemy>().collisionDamage==true)
-            {
-            health -= other.gameObject.GetComponent<Enemy>().damage;
-            Debug.Log("Player hit! Health: " + health);
-            iFrames = 1f;
-            }
-        }
+        health -= damage;
+        UpdateHealthBar();
     }
-} 
-    
+}

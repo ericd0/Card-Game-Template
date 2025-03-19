@@ -115,10 +115,4 @@ public class ChainLightning : Projectile
         
         return nextTarget;
     }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, range);
-    }
 }
