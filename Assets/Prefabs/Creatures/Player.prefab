@@ -106,10 +106,6 @@ MonoBehaviour:
   dashSpeed: 15
   dashDuration: 0.1
   dashCooldown: 1
-  maxHealth: 100
-  health: 0
-  regen: 0.5
-  healthBar: {fileID: 3194020082597112546, guid: c55a17076ea5502459bc6982f5d78862, type: 3}
 --- !u!50 &-980347378037169892
 Rigidbody2D:
   serializedVersion: 5

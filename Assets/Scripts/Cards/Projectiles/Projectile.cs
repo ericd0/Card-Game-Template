@@ -68,30 +68,21 @@ public abstract class Projectile : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
+            if (!CanHitEnemy(other.gameObject))
+            {
+                return;
+            }
+
             Enemy enemy = other.gameObject.GetComponent<Enemy>();
-            if (enemy == null) return;
-
-            // If we've hit this enemy before and aren't using repeat piercing, skip
-            if (hitEnemies.Contains(other.gameObject) && !repeatPiercing)
+            if (enemy != null)
             {
-                return;
+                enemy.health -= damage;
+                enemy.OnTakeDamage(damage);
             }
 
-            // Check piercing and iFrames
-            if (!CanHitEnemy(other.gameObject) || enemy.HasIFramesFor(gameObject))
-            {
-                return;
-            }
-
-            // Apply damage and add iFrames
-            enemy.health -= damage;
-            enemy.OnTakeDamage(damage);
-            enemy.AddIFramesFor(gameObject);
-
-            // Track hit enemies for repeat piercing check
             hitEnemies.Add(other.gameObject);
             
-            // Handle piercing count
+            // Reduce piercing if not infinite (negative)
             if (piercing > 0)
             {
                 piercing--;

@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
 
 public class Player : GenericBody
 {
@@ -10,52 +9,42 @@ public class Player : GenericBody
     public float dashCooldown = 1f;
     public float maxHealth = 100f;
     public float health;
+    private float iFrames = 0f;
     private float regenTimer = 0f;
-    private float maxRegenTimer = 1f;
+    private float maxRegenTimer = 0.5f;
     public float regen = 0.8f;
     private bool isDashing = false;
     private Vector3 dashDirection;
     private float lastDashTime = -Mathf.Infinity;
-    private Canvas gameCanvas;
-    public GameObject healthBar;
-    private Image healthFill;
 
     protected override void Start()
     {
         base.Start();
         teamId = 1; // Player team
         health = maxHealth;
-        gameCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
-        InitializeHealthBar();
-    }
-
-    private void InitializeHealthBar()
-    {
-        if (gameCanvas == null)
-        {
-            Debug.LogError("Main canvas not found! Make sure it's tagged as 'MainCanvas'");
-            return;
-        }
-
-        healthBar = Instantiate(healthBar, gameCanvas.transform);
-        RectTransform healthBarRect = healthBar.GetComponent<RectTransform>();
-        healthFill = healthBar.GetComponentsInChildren<Image>()[1]; // Get the fill image
-
-        // Position at bottom left with some padding
-        float padding = 20f;
-        healthBarRect.anchorMin = new Vector2(0, 0);
-        healthBarRect.anchorMax = new Vector2(0, 0);
-        healthBarRect.pivot = new Vector2(0, 0);
-        healthBarRect.anchoredPosition = new Vector2(padding, padding);
-
-        // Set initial size
-        healthBarRect.sizeDelta = new Vector2(200, 20); // Width and height of health bar
     }
 
     void Update()
     {
+<<<<<<< HEAD
         base.Update();
         HandleRegen();
+=======
+        iFrames -= Time.deltaTime;
+        regenTimer -= Time.deltaTime;
+        if (regenTimer <= 0f && health < maxHealth)
+        {
+            if (maxHealth - health < regen)
+            {
+                health = maxHealth;
+            }
+            else
+            {
+                health += regen;
+            }
+            regenTimer = maxRegenTimer;
+        }
+>>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
         if (!isDashing)
         {
             Move();
@@ -67,6 +56,7 @@ public class Player : GenericBody
         {
             PlaySelectedCard();
         }
+<<<<<<< HEAD
 
         UpdateHealthBar();
     }
@@ -104,6 +94,8 @@ public class Player : GenericBody
         {
             Destroy(healthBar);
         }
+=======
+>>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
     }
 
     void Move()
@@ -147,10 +139,22 @@ public class Player : GenericBody
     {
         GameManager.gm.PlayCard();
     }
+<<<<<<< HEAD
 
     public void TakeDamage(float damage)
+=======
+    void OnCollisionStay2D(Collision2D other)
+>>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
     {
-        health -= damage;
-        UpdateHealthBar();
+        if(other.gameObject.CompareTag("Enemy")&& iFrames <= 0f)
+        {
+            if (other.gameObject.GetComponent<Enemy>().collisionDamage==true)
+            {
+            health -= other.gameObject.GetComponent<Enemy>().damage;
+            Debug.Log("Player hit! Health: " + health);
+            iFrames = 1f;
+            }
+        }
     }
-}
+} 
+    
