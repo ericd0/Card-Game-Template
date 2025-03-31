@@ -33,9 +33,12 @@ public abstract class Enemy : GenericBody
     protected override void Update()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         base.Update();
 
         // Health bar position update
+=======
+>>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
 =======
 >>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
         if (healthBarInstance != null)
@@ -84,6 +87,7 @@ public abstract class Enemy : GenericBody
         Debug.Log($"{gameObject.name} hit! Health: {health}");
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     protected virtual void OnCollisionStay2D(Collision2D other)
     {
         if (collisionDamage)
@@ -96,6 +100,8 @@ public abstract class Enemy : GenericBody
             }
         }
     }
+=======
+>>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
 =======
 >>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
 }

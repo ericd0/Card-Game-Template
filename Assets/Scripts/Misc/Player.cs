@@ -27,9 +27,12 @@ public class Player : GenericBody
     void Update()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         base.Update();
         HandleRegen();
 =======
+=======
+>>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
         iFrames -= Time.deltaTime;
         regenTimer -= Time.deltaTime;
         if (regenTimer <= 0f && health < maxHealth)
@@ -56,6 +59,7 @@ public class Player : GenericBody
         {
             PlaySelectedCard();
         }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
         UpdateHealthBar();
@@ -94,6 +98,8 @@ public class Player : GenericBody
         {
             Destroy(healthBar);
         }
+=======
+>>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
 =======
 >>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
     }
@@ -140,8 +146,12 @@ public class Player : GenericBody
         GameManager.gm.PlayCard();
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     public void TakeDamage(float damage)
+=======
+    void OnCollisionStay2D(Collision2D other)
+>>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
 =======
     void OnCollisionStay2D(Collision2D other)
 >>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
