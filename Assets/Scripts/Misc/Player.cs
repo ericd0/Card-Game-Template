@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : GenericBody
 {
     public float moveSpeed = 4f;
     public float dashSpeed = 15f;
@@ -20,8 +20,10 @@ public class Player : MonoBehaviour
     public GameObject healthBar;
     private Image healthFill;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+        teamId = 1; // Player team
         health = maxHealth;
         gameCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
         InitializeHealthBar();
@@ -52,36 +54,40 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        regenTimer -= Time.deltaTime;
-        if (regenTimer <= 0f && health < maxHealth)
-        {
-            if (maxHealth - health < regen)
-            {
-                health = maxHealth;
-            }
-            else
-            {
-                health += regen;
-            }
-            regenTimer = maxRegenTimer;
-        }
+        base.Update();
+        HandleRegen();
         if (!isDashing)
         {
             Move();
             RotateTowardsMouse();
-            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Time.time >= lastDashTime + dashCooldown)
-            {
-                StartCoroutine(Dash());
-            }
+            HandleDashInput();
         }
 
-        // Check for left mouse button click
         if (Input.GetMouseButtonDown(0))
         {
             PlaySelectedCard();
         }
 
         UpdateHealthBar();
+    }
+
+    private void HandleRegen()
+    {
+        regenTimer -= Time.deltaTime;
+        if (regenTimer <= 0f && health < maxHealth)
+        {
+            health = Mathf.Min(maxHealth, health + regen);
+            regenTimer = maxRegenTimer;
+        }
+    }
+
+    private void HandleDashInput()
+    {
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) 
+            && Time.time >= lastDashTime + dashCooldown)
+        {
+            StartCoroutine(Dash());
+        }
     }
 
     private void UpdateHealthBar()
@@ -116,7 +122,7 @@ public class Player : MonoBehaviour
 
     void RotateTowardsMouse()
     {
-        Vector3 mousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 direction = (mousePosition - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
@@ -141,6 +147,7 @@ public class Player : MonoBehaviour
     {
         GameManager.gm.PlayCard();
     }
+
     public void TakeDamage(float damage)
     {
         health -= damage;

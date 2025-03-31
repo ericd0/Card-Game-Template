@@ -109,8 +109,8 @@ MonoBehaviour:
   chains: 4
   range: 6
   lineWidth: 0.15
-  chainDelay: 0.04
-  lightningColor: {r: 0, g: 1, b: 1, a: 1}
+  chainDelay: 0.025
+  lightningColor: {r: 0.95474964, g: 0.6949685, b: 1, a: 1}
 --- !u!50 &2248167719333379619
 Rigidbody2D:
   serializedVersion: 5

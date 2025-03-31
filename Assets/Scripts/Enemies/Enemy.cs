@@ -3,8 +3,12 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-public abstract class Enemy : MonoBehaviour
+public abstract class Enemy : GenericBody
 {
+    // Enemy specific properties
+    public float moveSpeed = 3f;
+    public float rotateSpeed = 2f;
+
     public float health;
     public float maxHealth;  // Add this field
     public bool collisionDamage;
@@ -18,15 +22,21 @@ public abstract class Enemy : MonoBehaviour
     private float healthBarOffset = 0.5f;  // Adjust based on sprite size
     private Canvas mainCanvas;
     private RectTransform healthBarRect;
-    protected virtual void Start()
+
+    protected override void Start()
     {
+        base.Start();
+        teamId = 2; // Enemy team
+
         maxHealth = health;
         mainCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>(); // Make sure to tag your main canvas
         InitializeHealthBar();
     }
 
-    protected virtual void Update()
+    protected override void Update()
     {
+        base.Update();
+
         // Health bar position update
         if (healthBarInstance != null)
         {
@@ -103,16 +113,13 @@ public abstract class Enemy : MonoBehaviour
     }
     protected virtual void OnCollisionStay2D(Collision2D other)
     {
-        if (collisionDamage == true)
+        if (collisionDamage)
         {
-            if (other.gameObject.CompareTag("Player"))
+            GenericBody hitBody = other.gameObject.GetComponent<GenericBody>();
+            if (hitBody != null && IsHostile(hitBody) && !HasIFramesFor(other.gameObject))
             {
-                Player player = other.gameObject.GetComponent<Player>();
-                if (!HasIFramesFor(other.gameObject))
-                {
-                    player.TakeDamage(damage);
-                    AddIFramesFor(other.gameObject);
-                }
+                hitBody.TakeDamage(damage, gameObject);
+                AddIFramesFor(other.gameObject);
             }
         }
     }
