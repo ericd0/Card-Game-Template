@@ -1,52 +1,57 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
-public abstract class Enemy : GenericBody
+public abstract class Enemy : MonoBehaviour
 {
-    // Enemy specific properties
-    public float moveSpeed = 3f;
-    public float rotateSpeed = 2f;
-
     public float health;
     public float maxHealth;  // Add this field
     public bool collisionDamage;
     public float damage;
     public GameObject healthBarPrefab;  // Assign the HealthBarCanvas prefab
-    
+    public float iFrameDuration = 0.5f;  // Duration of invincibility after being hit
+    private Dictionary<GameObject, float> iFrameTimers = new Dictionary<GameObject, float>();
+
     private GameObject healthBarInstance;
     private Image healthFill;
     private float healthBarOffset = 0.5f;  // Adjust based on sprite size
     private Canvas mainCanvas;
     private RectTransform healthBarRect;
-
-    protected override void Start()
+    protected virtual void Start()
     {
-        base.Start();
-        teamId = 2; // Enemy team
-
         maxHealth = health;
         mainCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>(); // Make sure to tag your main canvas
         InitializeHealthBar();
     }
 
-    protected override void Update()
+    protected virtual void Update()
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        base.Update();
-
         // Health bar position update
-=======
->>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
-=======
->>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
         if (healthBarInstance != null)
         {
-            // Convert world position to screen position
             Vector3 worldPosition = transform.position + Vector3.up * healthBarOffset;
             Vector2 screenPosition = Camera.main.WorldToScreenPoint(worldPosition);
             healthBarRect.position = screenPosition;
+        }
+
+        // Create a separate list for keys to remove
+        List<GameObject> expiredTimers = new List<GameObject>();
+        
+        // Use ToList() to create a copy of the keys for safe iteration
+        foreach (var kvp in iFrameTimers.ToList())
+        {
+            iFrameTimers[kvp.Key] -= Time.deltaTime;
+            if (iFrameTimers[kvp.Key] <= 0)
+            {
+                expiredTimers.Add(kvp.Key);
+            }
+        }
+        
+        // Remove expired timers after iteration is complete
+        foreach (var key in expiredTimers)
+        {
+            iFrameTimers.Remove(key);
         }
     }
 
@@ -73,6 +78,16 @@ public abstract class Enemy : GenericBody
         }
         Destroy(gameObject);
     }
+    public bool HasIFramesFor(GameObject attacker)
+    {
+        return iFrameTimers.ContainsKey(attacker) && iFrameTimers[attacker] > 0;
+    }
+
+    public void AddIFramesFor(GameObject attacker)
+    {
+        iFrameTimers[attacker] = iFrameDuration;
+    }
+
     public virtual void OnTakeDamage(float damage)
     {
         if (healthFill != null)
@@ -81,27 +96,24 @@ public abstract class Enemy : GenericBody
             healthFill.fillAmount = Mathf.Clamp01(health / maxHealth);
         }
         if (health <= 0)
-                {
-                    Die();
-                }
+        {
+            Die();
+        }
         Debug.Log($"{gameObject.name} hit! Health: {health}");
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
     protected virtual void OnCollisionStay2D(Collision2D other)
     {
-        if (collisionDamage)
+        if (collisionDamage == true)
         {
-            GenericBody hitBody = other.gameObject.GetComponent<GenericBody>();
-            if (hitBody != null && IsHostile(hitBody) && !HasIFramesFor(other.gameObject))
+            if (other.gameObject.CompareTag("Player"))
             {
-                hitBody.TakeDamage(damage, gameObject);
-                AddIFramesFor(other.gameObject);
+                Player player = other.gameObject.GetComponent<Player>();
+                if (!HasIFramesFor(other.gameObject))
+                {
+                    player.TakeDamage(damage);
+                    AddIFramesFor(other.gameObject);
+                }
             }
         }
     }
-=======
->>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
-=======
->>>>>>> parent of 9527cb5 (Player Health Bar, Camera Follow, iFrame system.)
 }

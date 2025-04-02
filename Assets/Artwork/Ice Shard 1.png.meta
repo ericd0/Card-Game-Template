@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Ice Shard 1_0: 5969914664505662892
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
