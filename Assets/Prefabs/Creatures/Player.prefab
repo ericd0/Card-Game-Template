@@ -102,13 +102,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e74bcd1dbe71644809b5f888cc487daa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4
+  health: 0
+  maxHealth: 150
+  damage: 10
+  moveSpeed: 4.4
+  team: 0
+  collisionDamage: 0
+  iFrameDuration: 0.5
+  hasHealthRegen: 1
+  regenAmount: 0.8
+  regenInterval: 1
   dashSpeed: 15
   dashDuration: 0.1
   dashCooldown: 1
-  maxHealth: 100
-  health: 0
-  regen: 0.8
   healthBar: {fileID: 5231011277611264110, guid: fe7df5217fd734f4eb4aeca6a9b4ff73, type: 3}
 --- !u!50 &-980347378037169892
 Rigidbody2D:

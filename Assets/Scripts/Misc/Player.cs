@@ -1,30 +1,51 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
-public class Player : MonoBehaviour
+public class Player : Body
 {
-    public float moveSpeed = 4f;
     public float dashSpeed = 15f;
     public float dashDuration = 0.1f;
     public float dashCooldown = 1f;
-    public float maxHealth = 100f;
-    public float health;
-    private float regenTimer = 0f;
-    private float maxRegenTimer = 1f;
-    public float regen = 0.8f;
     private bool isDashing = false;
     private Vector3 dashDirection;
     private float lastDashTime = -Mathf.Infinity;
+
+    // Keeping player-specific health bar for now
     private Canvas gameCanvas;
     public GameObject healthBar;
     private Image healthFill;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         health = maxHealth;
         gameCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
         InitializeHealthBar();
+    }
+
+    protected override void Update()
+    {
+        base.Update(); // Handles iFrames and health regen
+
+        if (!isDashing)
+        {
+            Move();
+            RotateTowardsMouse();
+            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) 
+                && Time.time >= lastDashTime + dashCooldown)
+            {
+                StartCoroutine(Dash());
+            }
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            PlaySelectedCard();
+        }
+
+        UpdateHealthBar();
     }
 
     private void InitializeHealthBar()
@@ -50,40 +71,6 @@ public class Player : MonoBehaviour
         healthBarRect.sizeDelta = new Vector2(200, 20); // Width and height of health bar
     }
 
-    void Update()
-    {
-        regenTimer -= Time.deltaTime;
-        if (regenTimer <= 0f && health < maxHealth)
-        {
-            if (maxHealth - health < regen)
-            {
-                health = maxHealth;
-            }
-            else
-            {
-                health += regen;
-            }
-            regenTimer = maxRegenTimer;
-        }
-        if (!isDashing)
-        {
-            Move();
-            RotateTowardsMouse();
-            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && Time.time >= lastDashTime + dashCooldown)
-            {
-                StartCoroutine(Dash());
-            }
-        }
-
-        // Check for left mouse button click
-        if (Input.GetMouseButtonDown(0))
-        {
-            PlaySelectedCard();
-        }
-
-        UpdateHealthBar();
-    }
-
     private void UpdateHealthBar()
     {
         if (healthFill != null)
@@ -98,6 +85,10 @@ public class Player : MonoBehaviour
         {
             Destroy(healthBar);
         }
+    }
+    protected override void Die()
+    {
+        //Not sure how I want this to work yet, so I'll leave it blank
     }
 
     void Move()
@@ -116,7 +107,7 @@ public class Player : MonoBehaviour
 
     void RotateTowardsMouse()
     {
-        Vector3 mousePosition = UnityEngine.Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 direction = (mousePosition - transform.position).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
@@ -140,10 +131,5 @@ public class Player : MonoBehaviour
     void PlaySelectedCard()
     {
         GameManager.gm.PlayCard();
-    }
-    public void TakeDamage(float damage)
-    {
-        health -= damage;
-        UpdateHealthBar();
     }
 }

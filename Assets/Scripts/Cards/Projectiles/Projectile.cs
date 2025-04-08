@@ -9,12 +9,15 @@ public abstract class Projectile : MonoBehaviour
     public int piercing;
     public bool repeatPiercing;
     protected Vector3 direction;
-    protected HashSet<GameObject> hitEnemies = new HashSet<GameObject>();
+    protected HashSet<GameObject> hitBodies = new HashSet<GameObject>();
+    private int team;
 
     void Start()
     {
         gameObject.layer = LayerMask.NameToLayer("Projectile");
         Destroy(gameObject, lifespan);
+        // Set team to match player's team
+        team = GameObject.FindGameObjectWithTag("Player").GetComponent<Body>().team;
         OnStart();
     }
 
@@ -46,15 +49,13 @@ public abstract class Projectile : MonoBehaviour
         }
     }
 
-    public virtual bool CanHitEnemy(GameObject enemy)
+    public virtual bool CanHitBody(Body targetBody)
     {
-        // Can't hit if already hit and not using repeat piercing
-        if (!repeatPiercing && hitEnemies.Contains(enemy))
+        if (!repeatPiercing && hitBodies.Contains(targetBody.gameObject))
         {
             return false;
         }
 
-        // Can't hit if out of pierces (unless negative for infinite)
         if (piercing == 0)
         {
             Destroy(gameObject);
@@ -66,23 +67,17 @@ public abstract class Projectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        Body hitBody = other.GetComponent<Body>();
+        if (hitBody != null && hitBody.team != team && team != 2 && hitBody.team != 2) // Using team check directly
         {
-            if (!CanHitEnemy(other.gameObject))
+            if (!CanHitBody(hitBody))
             {
                 return;
             }
 
-            Enemy enemy = other.gameObject.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.health -= damage;
-                enemy.OnTakeDamage(damage);
-            }
-
-            hitEnemies.Add(other.gameObject);
+            hitBody.TakeDamage(damage, gameObject);
+            hitBodies.Add(other.gameObject);
             
-            // Reduce piercing if not infinite (negative)
             if (piercing > 0)
             {
                 piercing--;
