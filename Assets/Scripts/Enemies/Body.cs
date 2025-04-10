@@ -94,6 +94,13 @@ public class Body : MonoBehaviour
         if (attacker != null)
             AddIFramesFor(attacker);
 
+        // Update health bar if present
+        HealthBarAbove healthBar = GetComponent<HealthBarAbove>();
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealthBar(health, maxHealth);
+        }
+
         if (health <= 0)
             Die();
     }

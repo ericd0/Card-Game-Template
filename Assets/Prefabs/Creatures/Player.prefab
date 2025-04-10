@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2700672322571089496}
   - component: {fileID: -980347378037169892}
   - component: {fileID: -2772544528765073719}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -110,8 +110,8 @@ MonoBehaviour:
   collisionDamage: 0
   iFrameDuration: 0.5
   hasHealthRegen: 1
-  regenAmount: 0.8
-  regenInterval: 1
+  regenAmount: 0.2
+  regenInterval: 0.25
   dashSpeed: 15
   dashDuration: 0.1
   dashCooldown: 1

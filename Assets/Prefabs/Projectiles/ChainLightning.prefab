@@ -102,12 +102,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: 0
-  lifespan: 0.3
+  lifespan: 0.4
   damage: 0
   piercing: 0
   repeatPiercing: 0
-  chains: 4
-  range: 6
+  team: 0
+  chains: 6
+  range: 5
   lineWidth: 0.15
   chainDelay: 0.025
   lightningColor: {r: 0.95474964, g: 0.6949685, b: 1, a: 1}

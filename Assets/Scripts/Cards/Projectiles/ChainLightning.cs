@@ -60,8 +60,8 @@ public class ChainLightning : Projectile
 
     private void SetupLineRenderer(LineRenderer line)
     {
-        line.startWidth = lineWidth;
-        line.endWidth = lineWidth;
+        line.startWidth = lineWidth * transform.localScale.x;
+        line.endWidth = lineWidth * transform.localScale.x;
         line.material = new Material(Shader.Find("Sprites/Default"));
         line.startColor = lightningColor;
         line.endColor = lightningColor;
@@ -99,17 +99,19 @@ public class ChainLightning : Projectile
     {
         float closestDistance = range;
         GameObject nextTarget = null;
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        Body[] bodies = FindObjectsByType<Body>(FindObjectsSortMode.None);
         
-        foreach (GameObject enemy in enemies)
+        foreach (Body targetBody in bodies)
         {
-            if (hitEnemies.Contains(enemy)) continue;
+            // Skip if already hit or if same team
+            if (hitEnemies.Contains(targetBody.gameObject) || targetBody.team == team || targetBody.team == 2)
+                continue;
             
-            float distance = Vector3.Distance(position, enemy.transform.position);
+            float distance = Vector3.Distance(position, targetBody.transform.position);
             if (distance < closestDistance)
             {
                 closestDistance = distance;
-                nextTarget = enemy;
+                nextTarget = targetBody.gameObject;
             }
         }
         

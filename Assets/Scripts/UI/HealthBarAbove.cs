@@ -9,6 +9,17 @@ public class HealthBarAbove : MonoBehaviour
     private Canvas mainCanvas;
     private RectTransform healthBarRect;
     public GameObject healthBarPrefab;
+    private Body attachedBody;
+
+    void Start()
+    {
+        attachedBody = GetComponent<Body>();
+        if (attachedBody != null)
+        {
+            Initialize();
+            UpdateHealthBar(attachedBody.health, attachedBody.maxHealth);
+        }
+    }
 
     public void Initialize()
     {

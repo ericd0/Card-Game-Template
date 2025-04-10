@@ -10,7 +10,7 @@ public abstract class Projectile : MonoBehaviour
     public bool repeatPiercing;
     protected Vector3 direction;
     protected HashSet<GameObject> hitBodies = new HashSet<GameObject>();
-    private int team;
+    public int team;
 
     void Start()
     {
