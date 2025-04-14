@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Intensify : BuffEffect
 {
-    public float damageMultiplier = 2f;
-    public float speedMultiplier = 1.5f;
+    public float damageMultiplier = 1.5f;
+    public float speedMultiplier = 1.2f;
     public float sizeMultiplier = 1.5f;
 
     public override void Apply(GameObject target)

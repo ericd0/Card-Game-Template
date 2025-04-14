@@ -107,6 +107,9 @@ MonoBehaviour:
   damage: 0
   piercing: 0
   repeatPiercing: 0
+  team: 0
+  shrinkRate: 0.05
+  shrinkInterval: 0.05
 --- !u!50 &5887450837180815426
 Rigidbody2D:
   serializedVersion: 5
@@ -172,7 +175,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.76666665, y: 0.18333334}
+    oldSize: {x: 1.84, y: 0.44}
     newSize: {x: 0.46, y: 0.11}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

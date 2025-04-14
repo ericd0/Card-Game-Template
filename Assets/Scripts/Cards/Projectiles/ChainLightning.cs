@@ -24,6 +24,7 @@ public class ChainLightning : Projectile
     private IEnumerator CreateChains()
     {
         Vector3 currentPos = transform.position;
+        Vector3 currentDirection = transform.right; // Get initial direction
 
         for (int i = 0; i < chains; i++)
         {
@@ -35,20 +36,24 @@ public class ChainLightning : Projectile
             GameObject target = FindNextTarget(currentPos, chainHitEnemies);
             if (target != null)
             {
+                // Chain to enemy
                 Vector3 endPos = target.transform.position;
                 line.SetPosition(0, currentPos);
                 line.SetPosition(1, endPos);
                 chainHitEnemies.Add(target);
                 currentPos = endPos;
-                
-                CreateColliderForLine(line, lineObj);
+                currentDirection = (endPos - currentPos).normalized; // Update direction based on last chain
             }
             else
             {
-                line.SetPosition(0, Vector3.zero);
-                line.SetPosition(1, Vector3.zero);
+                // Fire forward if no target found
+                Vector3 endPos = currentPos + (currentDirection * range);
+                line.SetPosition(0, currentPos);
+                line.SetPosition(1, endPos);
+                currentPos = endPos;
             }
             
+            CreateColliderForLine(line, lineObj);
             lightningLines.Add(line);
 
             if (i < chains - 1) // Don't delay after the last chain
