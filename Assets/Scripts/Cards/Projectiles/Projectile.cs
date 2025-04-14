@@ -29,7 +29,7 @@ public abstract class Projectile : MonoBehaviour
     protected abstract void OnStart();
     protected abstract void OnUpdate();
 
-    public virtual void SetStats(Card_data cardData)
+    public void SetStats(Card_data cardData)
     {
         if (cardData is ProjectileCard_data projectileData)
         {
