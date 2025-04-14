@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5887450837180815426}
   - component: {fileID: -2753294010251423191}
   m_Layer: 0
-  m_Name: Firebolt
+  m_Name: BasicProjectile
   m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,15 +79,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5125016487584988340, guid: d6361a3a67c274c32b3d13fe454b092d, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.46, y: 0.11}
+  m_Size: {x: 0.54, y: 0.18}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &8690002918545200719
@@ -107,6 +107,7 @@ MonoBehaviour:
   damage: 0
   piercing: 0
   repeatPiercing: 0
+  team: 0
 --- !u!50 &5887450837180815426
 Rigidbody2D:
   serializedVersion: 5
@@ -172,11 +173,11 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.76666665, y: 0.18333334}
-    newSize: {x: 0.46, y: 0.11}
+    oldSize: {x: 0.54, y: 0.18}
+    newSize: {x: 0.54, y: 0.18}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.76666665, y: 0.18333334}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
