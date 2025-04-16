@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Firebolt_data
   m_EditorClassIdentifier: 
   card_name: Firebolt
-  description: Small blast of fire
+  description: Bolt of fire that burns on hit. Strength scales with size.
   castspeed: 15
   sprite: {fileID: -5125016487584988340, guid: d6361a3a67c274c32b3d13fe454b092d, type: 3}
   damage: 70

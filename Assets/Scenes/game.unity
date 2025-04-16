@@ -310,7 +310,7 @@ MonoBehaviour:
   discard_pile: []
   blankCardPrefab: {fileID: 139944937306382617, guid: 99ef4bccd68e84d9ba6e7c8051daf70b, type: 3}
   cardSpacing: 160
-  bottomOffset: 20
+  bottomOffset: 0
   selectedCardRaise: 30
   leftEdgeOffset: 100
   deckCountText: {fileID: 934812004}
@@ -678,6 +678,7 @@ GameObject:
   - component: {fileID: 1973938348}
   - component: {fileID: 1973938347}
   - component: {fileID: 1973938351}
+  - component: {fileID: 1973938352}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: MainCanvas
@@ -777,6 +778,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1973938346}
   m_CullTransparentMesh: 1
+--- !u!114 &1973938352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973938346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59c67be1adf5ebd419793fa72037988e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

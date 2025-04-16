@@ -107,10 +107,11 @@ MonoBehaviour:
   piercing: 0
   repeatPiercing: 0
   team: 0
-  chains: 6
+  chains: 5
   range: 5
   lineWidth: 0.15
   chainDelay: 0.025
+  chainOffset: 0.3
   lightningColor: {r: 0.95474964, g: 0.6949685, b: 1, a: 1}
 --- !u!50 &2248167719333379619
 Rigidbody2D:

@@ -112,7 +112,7 @@ MonoBehaviour:
   hasHealthRegen: 1
   regenAmount: 0.2
   regenInterval: 0.25
-  dashSpeed: 15
+  dashSpeed: 18
   dashDuration: 0.1
   dashCooldown: 1
   healthBar: {fileID: 5231011277611264110, guid: fe7df5217fd734f4eb4aeca6a9b4ff73, type: 3}

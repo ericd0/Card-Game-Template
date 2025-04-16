@@ -8,6 +8,7 @@ public class ChainLightning : Projectile
     public float range = 8f;
     public float lineWidth = 0.1f;
     public float chainDelay = 0.1f; // Add delay between chains
+    public float chainOffset = 2f; // Add overshoot distance
     public Color lightningColor = Color.cyan;
     
     private List<LineRenderer> lightningLines;
@@ -36,13 +37,16 @@ public class ChainLightning : Projectile
             GameObject target = FindNextTarget(currentPos, chainHitEnemies);
             if (target != null)
             {
-                // Chain to enemy
-                Vector3 endPos = target.transform.position;
+                // Chain to enemy with overshoot
+                Vector3 targetPos = target.transform.position;
+                Vector3 direction = (targetPos - currentPos).normalized;
+                Vector3 endPos = targetPos + (direction * chainOffset); // Overshoot by chainOffset units
+                
                 line.SetPosition(0, currentPos);
                 line.SetPosition(1, endPos);
                 chainHitEnemies.Add(target);
                 currentPos = endPos;
-                currentDirection = (endPos - currentPos).normalized; // Update direction based on last chain
+                currentDirection = direction;
             }
             else
             {
