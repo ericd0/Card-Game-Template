@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card_name: Firebolt
   description: Bolt of fire that burns on hit. Strength scales with size.
-  castspeed: 15
+  castspeed: 20
   sprite: {fileID: -5125016487584988340, guid: d6361a3a67c274c32b3d13fe454b092d, type: 3}
-  damage: 70
+  damage: 65
   velocity: 14
   piercing: -1
   repeatPiercing: 0

@@ -1,17 +1,17 @@
 using UnityEngine;
 
-public class Canvas : MonoBehaviour
+public class CanvasScript : MonoBehaviour
 {
-    public static Canvas c;
+    public static CanvasScript cs;
     private void Awake()
     {
-        if (c != null && c != this)
+        if (cs != null && cs != this)
         {
             Destroy(gameObject);
         }
         else
         {
-            c = this;
+            cs = this;
             DontDestroyOnLoad(this.gameObject);
         }
     }

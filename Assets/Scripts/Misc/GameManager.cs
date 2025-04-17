@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public List<Card_data> discard_pile = new List<Card_data>();
     private int selectedCardIndex = 0;
     private float cardCooldown = 0f;
+    private GameObject caster;  // Add this field
 
     // UI Related
     private Canvas gameCanvas;
@@ -124,7 +125,7 @@ public class GameManager : MonoBehaviour
             float yPos = baseY + (i == selectedCardIndex ? selectedCardRaise : 0);
             cardObj.transform.localPosition = new Vector3(xPos, yPos, 0);
 
-            Card cardComponent = cardObj.GetComponent<Card>();
+            CardObject cardComponent = cardObj.GetComponent<CardObject>();
             if (cardComponent != null)
             {
                 cardComponent.data = hand[i];
@@ -174,7 +175,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayCard()
     {
-        if (!isShuffling)
+        if (!isShuffling && caster != null)  // Check for caster
         {
             if (cardCooldown > 0)
             {
@@ -186,13 +187,6 @@ public class GameManager : MonoBehaviour
             {
                 Card_data selectedCard = hand[selectedCardIndex];
                 cardCooldown = selectedCard.castspeed * 0.03f;
-                
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player == null)
-                {
-                    Debug.LogError("Player not found!");
-                    return;
-                }
 
                 // Handle different card types using 'is' operator
                 if (selectedCard is ProjectileCard_data projectileData)
@@ -200,13 +194,14 @@ public class GameManager : MonoBehaviour
                     if (projectileData.projectile != null)
                     {
                         GameObject projectileObj = Instantiate(projectileData.projectile, 
-                            player.transform.position, 
-                            player.transform.rotation);
+                            caster.transform.position, 
+                            caster.transform.rotation);
                         
                         Projectile projectile = projectileObj.GetComponent<Projectile>();
                         if (projectile != null)
                         {
                             projectile.SetStats(projectileData);
+                            projectile.caster = caster; // Set the caster reference
                             OnProjectileCast?.Invoke(projectile);
                         }
                     }
@@ -216,7 +211,8 @@ public class GameManager : MonoBehaviour
                     if (buffData.buffEffect != null)
                     {
                         BuffEffect buffInstance = Instantiate(buffData.buffEffect);
-                        buffInstance.Apply(player);
+                        buffInstance.caster = caster; // Set the caster reference
+                        buffInstance.Apply(caster);
                     }
                 }
                 else
@@ -237,6 +233,11 @@ public class GameManager : MonoBehaviour
                 UpdateDeckUI();
             }
         }
+    }
+
+    public void SetCaster(GameObject newCaster)
+    {
+        caster = newCaster;
     }
 
     void FillHand()

@@ -130,6 +130,7 @@ public class Player : Body
 
     void PlaySelectedCard()
     {
+        GameManager.gm.SetCaster(gameObject);
         GameManager.gm.PlayCard();
     }
 }

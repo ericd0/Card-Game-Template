@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class Projectile : MonoBehaviour
+public abstract class Projectile : Card
 {
     public float velocity;
     public float lifespan;
@@ -16,8 +16,7 @@ public abstract class Projectile : MonoBehaviour
     {
         gameObject.layer = LayerMask.NameToLayer("Projectile");
         Destroy(gameObject, lifespan);
-        // Set team to match player's team
-        team = GameObject.FindGameObjectWithTag("Player").GetComponent<Body>().team;
+        team = caster.GetComponent<Body>().team;
         OnStart();
     }
 
