@@ -11,6 +11,7 @@ public abstract class Projectile : Card
     protected Vector3 direction;
     protected HashSet<GameObject> hitBodies = new HashSet<GameObject>();
     public int team;
+    protected Effect[] onHitEffects;
 
     void Start()
     {
@@ -36,6 +37,8 @@ public abstract class Projectile : Card
             velocity = projectileData.velocity;
             piercing = projectileData.piercing;
             repeatPiercing = projectileData.repeatPiercing;
+            onHitEffects = projectileData.onHitEffects;
+            
             if (piercing >= 0)
             {
                 //Piercing at 0 makes it hit nothing, so we add 1 to make it hit at least once
@@ -45,6 +48,23 @@ public abstract class Projectile : Card
         else
         {
             Debug.LogError($"Tried to set projectile stats with non-projectile card: {cardData.GetType()}");
+        }
+    }
+
+    protected virtual void ApplyOnHitEffects(Body target)
+    {
+        if (onHitEffects == null) return;
+        
+        foreach (Effect effectPrefab in onHitEffects)
+        {
+            if (effectPrefab != null)
+            {
+                Effect effect = target.gameObject.AddComponent(effectPrefab.GetType()) as Effect;
+                if (effect != null)
+                {
+                    effect.Initialize(damage); // Pass the projectile's damage
+                }
+            }
         }
     }
 
@@ -75,6 +95,7 @@ public abstract class Projectile : Card
             }
 
             hitBody.TakeDamage(damage, gameObject);
+            ApplyOnHitEffects(hitBody);
             hitBodies.Add(other.gameObject);
             
             if (piercing > 0)

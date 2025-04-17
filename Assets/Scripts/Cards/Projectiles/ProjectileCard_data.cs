@@ -8,4 +8,5 @@ public class ProjectileCard_data : Card_data
     public int piercing;
     public bool repeatPiercing;
     public GameObject projectile;
+    public Effect[] onHitEffects; // Store Effect components directly
 }
