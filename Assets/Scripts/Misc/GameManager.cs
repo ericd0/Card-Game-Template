@@ -206,13 +206,21 @@ public class GameManager : MonoBehaviour
                         }
                     }
                 }
-                else if (selectedCard is BuffCard_data buffData)
+                else if (selectedCard is EffectCard_data buffData)
                 {
-                    if (buffData.buffEffect != null)
+                    if (buffData.effects != null)
                     {
-                        BuffEffect buffInstance = Instantiate(buffData.buffEffect);
-                        buffInstance.caster = caster; // Set the caster reference
-                        buffInstance.Apply(caster);
+                        foreach (Effect effectPrefab in buffData.effects)
+                        {
+                            if (effectPrefab != null)
+                            {
+                                Effect effect = caster.gameObject.AddComponent(effectPrefab.GetType()) as Effect;
+                                if (effect != null)
+                                {
+                                    JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(effectPrefab), effect);
+                                }
+                            }
+                        }
                     }
                 }
                 else

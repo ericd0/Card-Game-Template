@@ -11,7 +11,7 @@ public class CardObject : MonoBehaviour
     public float projectileSpeed;
     public int piercing;
     public GameObject projectile;
-    public BuffEffect buffEffect;
+    public Effect[] effects; // Changed from BuffEffect to Effect[]
     public Sprite sprite;
     
     // Only keep needed UI elements
@@ -33,9 +33,9 @@ public class CardObject : MonoBehaviour
             piercing = projectileData.piercing;
             projectile = projectileData.projectile;
         }
-        else if (data is BuffCard_data buffData)
+        else if (data is EffectCard_data buffData)
         {
-            buffEffect = buffData.buffEffect;
+            effects = buffData.effects; // Update to use new effects array
         }
 
         UpdateUI();

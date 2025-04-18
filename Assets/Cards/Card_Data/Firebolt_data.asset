@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Bolt of fire that burns on hit. Strength scales with size.
   castspeed: 20
   sprite: {fileID: -5125016487584988340, guid: d6361a3a67c274c32b3d13fe454b092d, type: 3}
-  damage: 65
+  damage: 50
   velocity: 14
   piercing: -1
   repeatPiercing: 0

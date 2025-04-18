@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card_name: Intensify
   description: Next projectile played is stronger
-  castspeed: 10
+  castspeed: 15
   sprite: {fileID: 0}
-  buffEffect: {fileID: 8423673085137984993, guid: 31628a5ac2a868282b339a59ba2e3a2d, type: 3}
+  effects:
+  - {fileID: 8423673085137984993, guid: 31628a5ac2a868282b339a59ba2e3a2d, type: 3}

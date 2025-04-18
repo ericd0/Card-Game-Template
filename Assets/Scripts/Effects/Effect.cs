@@ -3,7 +3,8 @@ using UnityEngine;
 public abstract class Effect : MonoBehaviour 
 {
     protected Body targetBody;
-    public float duration; // Duration in seconds, 0 for infinite
+    [SerializeField] // Add this attribute to ensure Unity serializes the field
+    protected float duration = 0f; // Add default value
     protected float remainingDuration;
 
     protected virtual void Start()
@@ -15,16 +16,16 @@ public abstract class Effect : MonoBehaviour
             Destroy(this);
             return;
         }
-        remainingDuration = duration; // Duration is now in seconds directly
-        OnEffectStart(); // Call start event when effect is initialized
+
+        remainingDuration = duration;
+        OnEffectStart();
     }
 
     protected virtual void Update()
     {
-        if (duration > 0) // Only count down if not infinite
+        if (duration > 0)
         {
             remainingDuration -= Time.deltaTime;
-            Debug.Log($"Effect remaining duration: {remainingDuration}"); // Debug line
             
             if (remainingDuration <= 0)
             {
