@@ -4,14 +4,14 @@ using UnityEngine.PlayerLoop;
 public class Burning : Effect
 {
     private int burnTick = 0;
-    private int damageTick = 60; //the tick that damage is applied
+    private int damageTick = 45; //the tick that damage is applied
     private float initialHit; //Damage of the hit that caused the burn
     private float burnDamage;
 
     public override void Initialize(float damage)
     {
         initialHit = damage;
-        duration = 4f;
+        duration = 3.5f;
     }
 
     protected override void Start()

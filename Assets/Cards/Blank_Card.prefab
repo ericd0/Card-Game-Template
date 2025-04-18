@@ -54,7 +54,7 @@ MonoBehaviour:
   projectileSpeed: 0
   piercing: 0
   projectile: {fileID: 0}
-  buffEffect: {fileID: 0}
+  effects: []
   sprite: {fileID: 0}
   nameText: {fileID: 7884059924108554137}
   spriteImage: {fileID: 8706265603331512291}
@@ -283,7 +283,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.41960788, g: 0.08235294, b: 0.08627451, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

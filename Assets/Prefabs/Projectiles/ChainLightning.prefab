@@ -107,7 +107,7 @@ MonoBehaviour:
   piercing: 0
   repeatPiercing: 0
   team: 0
-  chains: 5
+  chains: 4
   range: 5
   lineWidth: 0.15
   chainDelay: 0.025
