@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 0
-  damageMultiplier: 1.5
-  speedMultiplier: 1.2
-  sizeMultiplier: 1.5
+  canStack: 0
+  damageMultiplier: 0.25
+  speedMultiplier: 0.2
+  sizeMultiplier: 0.5
