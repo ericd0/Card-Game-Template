@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Zap multiple targets
   castspeed: 25
   sprite: {fileID: -2983090718515566234, guid: 2d27640d75a569b1f97892646c88927e, type: 3}
-  damage: 75
+  damage: 80
   velocity: 0
   piercing: -1
   repeatPiercing: 0

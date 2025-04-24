@@ -7,11 +7,10 @@ public abstract class Effect : MonoBehaviour
     protected float duration = 0f;
     protected float remainingDuration;
     [SerializeField]
-    protected bool canStack = false;
+    protected bool canStack;
     protected int stacks = 1;
     protected float stackDuration;
-
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         targetBody = GetComponentInParent<Body>();
         if (targetBody == null)
@@ -21,6 +20,22 @@ public abstract class Effect : MonoBehaviour
             return;
         }
 
+        // Try to find existing effect of the same type
+        Effect existingEffect = targetBody.GetComponent(this.GetType()) as Effect;
+        if (existingEffect != null && existingEffect != this)
+        {
+            // If effect exists and can stack, add stack and destroy this instance
+            if (existingEffect.canStack)
+            {
+                existingEffect.AddStack();
+                Destroy(this);
+                return;
+            }
+        }
+    }
+
+    protected virtual void Start()
+    {
         remainingDuration = duration;
         stackDuration = duration;
         OnEffectStart();

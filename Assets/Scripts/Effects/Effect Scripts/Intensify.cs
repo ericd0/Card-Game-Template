@@ -4,9 +4,9 @@ public class Intensify : Effect
 {
     [Header("Intensify Effect Settings")]
     [Tooltip("Already accounts for stacks and initial amount.")]
-    public float damageMultiplier = 0.5f;
-    public float speedMultiplier = 0.2f;
-    public float sizeMultiplier = 0.25f;
+    public float damageMultiplier;
+    public float speedMultiplier;
+    public float sizeMultiplier;
 
     protected override void Start()
     {
@@ -31,7 +31,6 @@ public class Intensify : Effect
         projectile.damage *= (damageMultiplier * stacks)+1f;
         projectile.velocity *= (speedMultiplier * stacks)+1f;
         projectile.transform.localScale *= (sizeMultiplier *stacks)+1f;
-        
         Debug.Log("Projectile intensified!");
         Destroy(this); // Remove effect after one use
     }
