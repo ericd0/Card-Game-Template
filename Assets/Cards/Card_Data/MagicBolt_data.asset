@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f809983f850a01828e0b964f5d45a8b, type: 3}
+  m_Name: MagicBolt_data
+  m_EditorClassIdentifier: 
+  card_name: Magic Bolt
+  description: 
+  castspeed: 8
+  sprite: {fileID: 4833261752811683700, guid: 4409d74801928c641b225193802185ad, type: 3}
+  damage: 95
+  velocity: 20
+  piercing: 1
+  repeatPiercing: 0
+  projectile: {fileID: 4002401775614950059, guid: 514c97e33590dfb4fb5e1778e81bf01d, type: 3}
+  onHitEffects: []

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public abstract class Projectile : Card
 {
+    protected Card_data cardData;
     public float velocity;
     public float lifespan;
     public float damage;
@@ -29,7 +30,7 @@ public abstract class Projectile : Card
     protected abstract void OnStart();
     protected abstract void OnUpdate();
 
-    public void SetStats(Card_data cardData)
+    public virtual void SetStats(Card_data cardData)
     {
         if (cardData is ProjectileCard_data projectileData)
         {
