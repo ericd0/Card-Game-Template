@@ -9,6 +9,7 @@ public class Body : MonoBehaviour
     public float maxHealth;
     public float damage;
     public float moveSpeed;
+    public float moveSpeedMultiplier = 1f;
 
     [Header("Team")]
     public int team; // 0 = player, 1 = enemy, 2 = neutral
@@ -103,6 +104,10 @@ public class Body : MonoBehaviour
 
         if (health <= 0)
             Die();
+    }
+    public virtual void SetStats()
+    {
+        moveSpeed = moveSpeed * moveSpeedMultiplier;
     }
 
     protected virtual void Die()

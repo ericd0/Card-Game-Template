@@ -11,6 +11,9 @@ public class Player : Body
     private bool isDashing = false;
     private Vector3 dashDirection;
     private float lastDashTime = -Mathf.Infinity;
+    public float shuffleSpeed = 1f;
+    public float shuffleSpeedMultiplier = 1f;
+    public float castSpeedMultiplier = 1f;
 
     // Keeping player-specific health bar for now
     private Canvas gameCanvas;
@@ -46,6 +49,11 @@ public class Player : Body
         }
 
         UpdateHealthBar();
+    }
+    public override void SetStats()
+    {
+        base.SetStats();
+
     }
 
     private void InitializeHealthBar()
@@ -130,7 +138,6 @@ public class Player : Body
 
     void PlaySelectedCard()
     {
-        GameManager.gm.SetCaster(gameObject);
         GameManager.gm.PlayCard();
     }
 }

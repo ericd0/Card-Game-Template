@@ -8,13 +8,18 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public static GameManager gm;
+    public GameObject playerPrefab; // Assign in inspector
+    private Player currentPlayer;
+    
+    // Add events for player-related actions
+    public static event System.Action<Player> OnPlayerSpawned;
+    public static event System.Action<Player> OnPlayerDespawned;
     public static event System.Action<Projectile> OnProjectileCast;
     public List<Card_data> deck = new List<Card_data>();
     public List<Card_data> hand = new List<Card_data>();
     public List<Card_data> discard_pile = new List<Card_data>();
     private int selectedCardIndex = 0;
     private float cardCooldown = 0f;
-    private GameObject caster;  // Add this field
 
     // UI Related
     private Canvas gameCanvas;
@@ -46,20 +51,75 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    private void OnEnable()
     {
-        gameCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
-        if (gameCanvas == null)
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable() 
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "game") // Only spawn in game scene
         {
-            Debug.LogError("Main canvas not found! Make sure it's tagged as 'MainCanvas'");
-            return;
+            SpawnPlayer();
+            InitializeGameState();
+        }
+        else
+        {
+            DespawnPlayer();
+        }
+    }
+
+    private void SpawnPlayer()
+    {
+        if (currentPlayer != null)
+        {
+            DespawnPlayer();
         }
 
+        GameObject playerObj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+        currentPlayer = playerObj.GetComponent<Player>();
+        OnPlayerSpawned?.Invoke(currentPlayer);
+    }
+
+    private void DespawnPlayer()
+    {
+        if (currentPlayer != null)
+        {
+            OnPlayerDespawned?.Invoke(currentPlayer);
+            Destroy(currentPlayer.gameObject);
+            currentPlayer = null;
+        }
+    }
+
+    private void InitializeGameState()
+    {
+        // Make sure we have the canvas
+        if (gameCanvas == null)
+        {
+            gameCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
+        }
+
+        // Initialize game state
         InitializeDeck();
         RandomizeDeck();
         FillHand();
         UpdateHandDisplay();
         UpdateDeckUI();
+    }
+
+    void Start()
+    {
+        // Only find the canvas reference, don't re-initialize everything
+        gameCanvas = GameObject.FindGameObjectWithTag("MainCanvas").GetComponent<Canvas>();
+        if (gameCanvas == null)
+        {
+            Debug.LogError("Main canvas not found! Make sure it's tagged as 'MainCanvas'");
+        }
     }
 
     void Update()
@@ -182,7 +242,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayCard()
     {
-        if (!isShuffling && caster != null)  // Check for caster
+        if (!isShuffling && currentPlayer != null)  // Use currentPlayer instead of caster
         {
             if (cardCooldown > 0)
             {
@@ -193,22 +253,25 @@ public class GameManager : MonoBehaviour
             if (hand.Count > 0)
             {
                 Card_data selectedCard = hand[selectedCardIndex];
-                cardCooldown = selectedCard.castspeed * 0.03f;
-
+                cardCooldown = selectedCard.castspeed * 0.03f * currentPlayer.castSpeedMultiplier;
+                if (cardCooldown < 0.01f)
+                {
+                    cardCooldown = 0.01f;
+                }
                 // Handle different card types using 'is' operator
                 if (selectedCard is ProjectileCard_data projectileData)
                 {
                     if (projectileData.projectile != null)
                     {
                         GameObject projectileObj = Instantiate(projectileData.projectile, 
-                            caster.transform.position, 
-                            caster.transform.rotation);
+                            currentPlayer.transform.position, 
+                            currentPlayer.transform.rotation);
                         
                         Projectile projectile = projectileObj.GetComponent<Projectile>();
                         if (projectile != null)
                         {
                             projectile.SetStats(projectileData);
-                            projectile.caster = caster; // Set the caster reference
+                            projectile.caster = currentPlayer.gameObject; // Set the caster reference
                             OnProjectileCast?.Invoke(projectile);
                         }
                     }
@@ -221,7 +284,7 @@ public class GameManager : MonoBehaviour
                         {
                             if (effectPrefab != null)
                             {
-                                Effect effect = caster.gameObject.AddComponent(effectPrefab.GetType()) as Effect;
+                                Effect effect = currentPlayer.gameObject.AddComponent(effectPrefab.GetType()) as Effect;
                                 if (effect != null)
                                 {
                                     JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(effectPrefab), effect);
@@ -248,11 +311,6 @@ public class GameManager : MonoBehaviour
                 UpdateDeckUI();
             }
         }
-    }
-
-    public void SetCaster(GameObject newCaster)
-    {
-        caster = newCaster;
     }
 
     void FillHand()
@@ -282,10 +340,11 @@ public class GameManager : MonoBehaviour
         Debug.Log("Started shuffling...");
 
         // Calculate shuffle time
-        float baseTime = 1f;
+        float baseTime = currentPlayer.shuffleSpeed;
+        float shuffleSpeedMultiplier = currentPlayer.shuffleSpeedMultiplier;
         float cardMultiplier = deck.Count * 0.02f;
         float notEmptyMultiplier = deck.Count > 0 ? 0.1f : 0f;
-        float totalShuffleTime = baseTime + cardMultiplier + notEmptyMultiplier;
+        float totalShuffleTime = (baseTime + cardMultiplier + notEmptyMultiplier) * shuffleSpeedMultiplier;
         yield return new WaitForSeconds(totalShuffleTime);
 
         // Perform the shuffle

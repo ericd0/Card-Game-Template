@@ -1,11 +1,9 @@
-using System.Buffers.Text;
 using UnityEngine;
-//TODO: some structural changes to the deck and player might be needed to have the shuffle speed and cast speed not be a total mess
 public class Haste : Effect
 {
-    public float castSpeedMultiplier = 0.9f;
-    //public float shuffleSpeedMultiplier = 1.2f; adding this might be harder than it looks, leave it for now
-    public float moveSpeedMultiplier = 1.15f;
+    public float castSpeedBonus = 0.2f;
+    public float shuffleSpeedBonus = 0.2f;
+    public float moveSpeedBonus = .2f;
     protected override void Start()
     {
         duration = 3f;
@@ -13,25 +11,44 @@ public class Haste : Effect
     }
     protected override void OnEffectStart()
     {
-        //targetBody.moveSpeed *= moveSpeedMultiplier;
-        GameManager.OnProjectileCast += OnProjectileCast;
+        // Check if targetBody exists first
+        if (targetBody == null) return;
 
+        // Store original values and apply new ones if properties exist
+        var player = targetBody as Player;
+        if (player != null)
+        {
+            player.moveSpeedMultiplier += moveSpeedBonus;
+            player.shuffleSpeedMultiplier += shuffleSpeedBonus;
+            player.castSpeedMultiplier += castSpeedBonus;
+            player.SetStats();
+        }
+        else 
+        {
+            targetBody.moveSpeedMultiplier += moveSpeedBonus;
+            targetBody.SetStats();
+        }
     }
 
     protected override void OnEffectEnd()
     {
-        //GameManager.OnProjectileCast -= OnProjectileCast;
-        targetBody.moveSpeed /= moveSpeedMultiplier;
+        if (targetBody == null) return;
+        var player = targetBody as Player;
+        if (player != null)
+        {
+            player.moveSpeedMultiplier -= moveSpeedBonus;
+            player.shuffleSpeedMultiplier -= shuffleSpeedBonus;
+            player.castSpeedMultiplier -= castSpeedBonus;
+            player.SetStats();
+        }
+        else
+        {
+            targetBody.moveSpeedMultiplier -= moveSpeedBonus;
+            targetBody.SetStats();
+        }
     }
-
-    private void OnProjectileCast(Projectile projectile)
-    {
-        //not yet
-        //projectile.castspeed *= castSpeedMultiplier;
-    }
-
     private void OnDestroy()
     {
-        //GameManager.OnProjectileCast -= OnProjectileCast;
+
     }
 }
