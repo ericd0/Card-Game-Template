@@ -253,7 +253,7 @@ public class GameManager : MonoBehaviour
             if (hand.Count > 0)
             {
                 Card_data selectedCard = hand[selectedCardIndex];
-                cardCooldown = selectedCard.castspeed * 0.03f * currentPlayer.castSpeedMultiplier;
+                cardCooldown = selectedCard.castspeed * 0.03f / currentPlayer.castSpeedMultiplier;
                 if (cardCooldown < 0.01f)
                 {
                     cardCooldown = 0.01f;
@@ -344,7 +344,7 @@ public class GameManager : MonoBehaviour
         float shuffleSpeedMultiplier = currentPlayer.shuffleSpeedMultiplier;
         float cardMultiplier = deck.Count * 0.02f;
         float notEmptyMultiplier = deck.Count > 0 ? 0.1f : 0f;
-        float totalShuffleTime = (baseTime + cardMultiplier + notEmptyMultiplier) * shuffleSpeedMultiplier;
+        float totalShuffleTime = (baseTime + cardMultiplier + notEmptyMultiplier) / shuffleSpeedMultiplier;
         yield return new WaitForSeconds(totalShuffleTime);
 
         // Perform the shuffle

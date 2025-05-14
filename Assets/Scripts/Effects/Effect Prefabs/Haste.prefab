@@ -45,5 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   duration: 3
-  castSpeedMultiplier: 1.25
-  moveSpeedMultiplier: 1.15
+  canStack: 1
+  castSpeedBonus: 0.2
+  shuffleSpeedBonus: 0.2
+  moveSpeedBonus: 0.2

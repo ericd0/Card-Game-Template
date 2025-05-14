@@ -106,7 +106,9 @@ MonoBehaviour:
   health: 0
   maxHealth: 100
   damage: 10
-  moveSpeed: 3
+  moveSpeed: 0
+  baseMoveSpeed: 3
+  moveSpeedMultiplier: 1
   team: 1
   collisionDamage: 1
   iFrameDuration: 0.5

@@ -4,8 +4,8 @@ public abstract class Effect : MonoBehaviour
 {
     protected Body targetBody;
     [SerializeField] 
-    protected float duration = 0f;
-    protected float remainingDuration;
+    protected float baseDuration = 0f;
+    protected float duration;
     [SerializeField]
     protected bool canStack;
     protected int stacks = 1;
@@ -36,8 +36,7 @@ public abstract class Effect : MonoBehaviour
 
     protected virtual void Start()
     {
-        remainingDuration = duration;
-        stackDuration = duration;
+        duration = baseDuration;
         OnEffectStart();
     }
 
@@ -45,9 +44,9 @@ public abstract class Effect : MonoBehaviour
     {
         if (duration > 0)
         {
-            remainingDuration -= Time.deltaTime;
+            duration -= Time.deltaTime;
             
-            if (remainingDuration <= 0)
+            if (duration <= 0)
             {
                 OnEffectEnd();
                 Destroy(this);
@@ -83,7 +82,21 @@ public abstract class Effect : MonoBehaviour
     {
         stacks = 0;
     }
-
+    protected virtual void ResetDuration()
+    {
+        duration = baseDuration;
+    }
+    protected virtual void StackDuration()
+    {
+        if (duration + stackDuration < baseDuration)
+        {
+            duration = baseDuration + stackDuration;
+        }
+        else
+        {
+            duration += stackDuration;
+        }
+    }
     public virtual void Initialize(float damage)
     {
         // Base implementation can be empty

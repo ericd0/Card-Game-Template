@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 public class Haste : Effect
 {
@@ -6,10 +7,32 @@ public class Haste : Effect
     public float moveSpeedBonus = .2f;
     protected override void Start()
     {
-        duration = 3f;
+        baseDuration = 5f;
         base.Start();
     }
     protected override void OnEffectStart()
+    {
+        AddHaste();
+    }
+
+    protected override void OnEffectEnd()
+    {
+        if (targetBody == null) return;
+        var player = targetBody as Player;
+        if (player != null)
+        {
+            player.moveSpeedMultiplier -= moveSpeedBonus * stacks;
+            player.shuffleSpeedMultiplier -= shuffleSpeedBonus * stacks;
+            player.castSpeedMultiplier -= castSpeedBonus * stacks;
+            player.SetStats();
+        }
+        else
+        {
+            targetBody.moveSpeedMultiplier -= moveSpeedBonus * stacks;
+            targetBody.SetStats();
+        }
+    }
+    void AddHaste()
     {
         // Check if targetBody exists first
         if (targetBody == null) return;
@@ -29,26 +52,10 @@ public class Haste : Effect
             targetBody.SetStats();
         }
     }
-
-    protected override void OnEffectEnd()
+    protected override void OnStackAdded()
     {
-        if (targetBody == null) return;
-        var player = targetBody as Player;
-        if (player != null)
-        {
-            player.moveSpeedMultiplier -= moveSpeedBonus;
-            player.shuffleSpeedMultiplier -= shuffleSpeedBonus;
-            player.castSpeedMultiplier -= castSpeedBonus;
-            player.SetStats();
-        }
-        else
-        {
-            targetBody.moveSpeedMultiplier -= moveSpeedBonus;
-            targetBody.SetStats();
-        }
+        AddHaste();
+        ResetDuration();
     }
-    private void OnDestroy()
-    {
 
-    }
 }

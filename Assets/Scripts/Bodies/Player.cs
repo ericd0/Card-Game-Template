@@ -5,13 +5,13 @@ using Unity.VisualScripting;
 
 public class Player : Body
 {
-    public float dashSpeed = 15f;
+    public float dashSpeed;
     public float dashDuration = 0.1f;
     public float dashCooldown = 1f;
     private bool isDashing = false;
     private Vector3 dashDirection;
     private float lastDashTime = -Mathf.Infinity;
-    public float shuffleSpeed = 1f;
+    public float shuffleSpeed;
     public float shuffleSpeedMultiplier = 1f;
     public float castSpeedMultiplier = 1f;
 
@@ -53,7 +53,7 @@ public class Player : Body
     public override void SetStats()
     {
         base.SetStats();
-
+        dashSpeed = moveSpeed * 3.5f;
     }
 
     private void InitializeHealthBar()
@@ -126,7 +126,6 @@ public class Player : Body
         isDashing = true;
         lastDashTime = Time.time;
         float startTime = Time.time;
-
         while (Time.time < startTime + dashDuration)
         {
             transform.position += dashDirection * dashSpeed * Time.deltaTime;

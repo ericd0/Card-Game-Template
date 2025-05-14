@@ -9,6 +9,7 @@ public class Body : MonoBehaviour
     public float maxHealth;
     public float damage;
     public float moveSpeed;
+    public float baseMoveSpeed;
     public float moveSpeedMultiplier = 1f;
 
     [Header("Team")]
@@ -24,6 +25,11 @@ public class Body : MonoBehaviour
     public float regenAmount = 0.8f;
     public float regenInterval = 1f;
     private float regenTimer = 0f;
+    protected virtual void Awake()
+    {
+        moveSpeed = baseMoveSpeed;
+        SetStats();
+    }
 
     protected virtual void Start()
     {
@@ -107,7 +113,7 @@ public class Body : MonoBehaviour
     }
     public virtual void SetStats()
     {
-        moveSpeed = moveSpeed * moveSpeedMultiplier;
+        moveSpeed = baseMoveSpeed * moveSpeedMultiplier;
     }
 
     protected virtual void Die()

@@ -105,7 +105,9 @@ MonoBehaviour:
   health: 0
   maxHealth: 150
   damage: 10
-  moveSpeed: 4.4
+  moveSpeed: 0
+  baseMoveSpeed: 4
+  moveSpeedMultiplier: 1
   team: 0
   collisionDamage: 0
   iFrameDuration: 0.5
@@ -115,6 +117,9 @@ MonoBehaviour:
   dashSpeed: 18
   dashDuration: 0.1
   dashCooldown: 1
+  shuffleSpeed: 1
+  shuffleSpeedMultiplier: 1
+  castSpeedMultiplier: 1
   healthBar: {fileID: 5231011277611264110, guid: fe7df5217fd734f4eb4aeca6a9b4ff73, type: 3}
 --- !u!50 &-980347378037169892
 Rigidbody2D:
