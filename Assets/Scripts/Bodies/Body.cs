@@ -16,11 +16,13 @@ public class Body : MonoBehaviour
     public int team; // 0 = player, 1 = enemy, 2 = neutral
 
     [Header("Combat")]
+    [Tooltip("Can deal damage on collision if true")]
     public bool collisionDamage;
     public float iFrameDuration = 0.5f;
     private Dictionary<GameObject, float> iFrameTimers = new Dictionary<GameObject, float>();
 
     [Header("Health Regeneration")]
+    [Tooltip("Enables passive health regeneration")]
     public bool hasHealthRegen;
     public float regenAmount = 0.8f;
     public float regenInterval = 1f;

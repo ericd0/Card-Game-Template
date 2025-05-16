@@ -11,7 +11,6 @@ public class Burning : Effect
     public override void Initialize(float damage)
     {
         initialHit = damage;
-        baseDuration = 3.5f;
     }
 
     protected override void Start()

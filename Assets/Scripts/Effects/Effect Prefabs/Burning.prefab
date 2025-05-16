@@ -44,4 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea6a799a9b8fea4fb1f5759adc68425, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 8
+  <baseDuration>k__BackingField: 3.5
+  canStack: 0
+  canApplyMultiple: 1

@@ -1,17 +1,23 @@
+using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Effect : MonoBehaviour 
 {
     protected Body targetBody;
-    [SerializeField] 
-    protected float baseDuration = 0f;
+    [field: SerializeField] protected float baseDuration {get; private set;}
     protected float duration;
     [SerializeField]
+    [Tooltip("Allows stacking of the effect. If false, effects are applied separately.")]
     protected bool canStack;
+    [SerializeField]
+    [Tooltip("This only matters if canStack is false. Allows applying multiple instances of the same effect. Otherwise, duration resets if the effect is applied again.")]
+    protected bool canApplyMultiple;
     protected int stacks = 1;
     protected float stackDuration;
     protected virtual void Awake()
     {
+        Debug.Log($"Awake - baseDuration: {baseDuration}");
         targetBody = GetComponentInParent<Body>();
         if (targetBody == null)
         {
@@ -28,6 +34,12 @@ public abstract class Effect : MonoBehaviour
             if (existingEffect.canStack)
             {
                 existingEffect.AddStack();
+                Destroy(this);
+                return;
+            }
+            else if(!canApplyMultiple)
+            {
+                existingEffect.ResetDuration();
                 Destroy(this);
                 return;
             }
@@ -53,7 +65,6 @@ public abstract class Effect : MonoBehaviour
                 return;
             }
         }
-        
         OnEffectTick();
     }
 
@@ -84,7 +95,9 @@ public abstract class Effect : MonoBehaviour
     }
     protected virtual void ResetDuration()
     {
+        Debug.Log($"ResetDuration - Before reset - baseDuration: {baseDuration}, duration: {duration}");
         duration = baseDuration;
+        Debug.Log($"ResetDuration - After reset - baseDuration: {baseDuration}, duration: {duration}");
     }
     protected virtual void StackDuration()
     {

@@ -7,7 +7,6 @@ public class Haste : Effect
     public float moveSpeedBonus = .2f;
     protected override void Start()
     {
-        baseDuration = 5f;
         base.Start();
     }
     protected override void OnEffectStart()
