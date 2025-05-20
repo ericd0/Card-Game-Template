@@ -44,8 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ffad356df66d0d4d85edd0c39aaeb1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 3
+  baseDuration: 3
   canStack: 1
+  canApplyMultiple: 0
   castSpeedBonus: 0.2
   shuffleSpeedBonus: 0.2
   moveSpeedBonus: 0.2

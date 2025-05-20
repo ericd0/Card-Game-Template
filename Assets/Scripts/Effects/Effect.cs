@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Effect : MonoBehaviour 
 {
     protected Body targetBody;
-    [field: SerializeField] protected float baseDuration {get; private set;}
+    [SerializeField] protected float baseDuration;
     protected float duration;
     [SerializeField]
     [Tooltip("Allows stacking of the effect. If false, effects are applied separately.")]
@@ -49,6 +49,7 @@ public abstract class Effect : MonoBehaviour
     protected virtual void Start()
     {
         duration = baseDuration;
+        print(baseDuration);
         OnEffectStart();
     }
 

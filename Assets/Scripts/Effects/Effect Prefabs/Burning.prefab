@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1967321317531753594}
-  - component: {fileID: 2821329931277528781}
+  - component: {fileID: -2554479417500347534}
   m_Layer: 0
   m_Name: Burning
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2821329931277528781
+--- !u!114 &-2554479417500347534
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ea6a799a9b8fea4fb1f5759adc68425, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <baseDuration>k__BackingField: 3.5
+  baseDuration: 3.5
   canStack: 0
   canApplyMultiple: 1

@@ -22,4 +22,4 @@ MonoBehaviour:
   repeatPiercing: 0
   projectile: {fileID: 8806555176520796744, guid: 48f49d44e315941c88946062c847aea3, type: 3}
   onHitEffects:
-  - {fileID: 2821329931277528781, guid: 72617be1583d22c43bce382f1cc4f9ee, type: 3}
+  - {fileID: -2554479417500347534, guid: 72617be1583d22c43bce382f1cc4f9ee, type: 3}
