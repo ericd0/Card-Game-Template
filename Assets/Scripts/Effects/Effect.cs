@@ -2,10 +2,13 @@ using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public abstract class Effect : MonoBehaviour 
+public abstract class Effect : MonoBehaviour
 {
+    protected float baseDuration;
+    [Tooltip("This is effectDuration")]
+    [SerializeField] private float effectDuration;
     protected Body targetBody;
-    [SerializeField] protected float baseDuration;
+    
     protected float duration;
     [SerializeField]
     [Tooltip("Allows stacking of the effect. If false, effects are applied separately.")]
@@ -15,8 +18,10 @@ public abstract class Effect : MonoBehaviour
     protected bool canApplyMultiple;
     protected int stacks = 1;
     protected float stackDuration;
+    
     protected virtual void Awake()
     {
+        baseDuration = effectDuration;
         Debug.Log($"Awake - baseDuration: {baseDuration}");
         targetBody = GetComponentInParent<Body>();
         if (targetBody == null)
@@ -37,7 +42,7 @@ public abstract class Effect : MonoBehaviour
                 Destroy(this);
                 return;
             }
-            else if(!canApplyMultiple)
+            else if (!canApplyMultiple)
             {
                 existingEffect.ResetDuration();
                 Destroy(this);
