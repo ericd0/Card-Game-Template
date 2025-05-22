@@ -4,9 +4,7 @@ using UnityEngine;
 
 public abstract class Effect : MonoBehaviour
 {
-    protected float baseDuration;
-    [Tooltip("This is effectDuration")]
-    [SerializeField] private float effectDuration;
+    [SerializeField] protected float baseDuration;
     protected Body targetBody;
     
     protected float duration;
@@ -18,10 +16,8 @@ public abstract class Effect : MonoBehaviour
     protected bool canApplyMultiple;
     protected int stacks = 1;
     protected float stackDuration;
-    
     protected virtual void Awake()
     {
-        baseDuration = effectDuration;
         Debug.Log($"Awake - baseDuration: {baseDuration}");
         targetBody = GetComponentInParent<Body>();
         if (targetBody == null)
