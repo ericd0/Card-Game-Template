@@ -2,9 +2,10 @@ using Unity.VisualScripting;
 using UnityEngine;
 public class Haste : Effect
 {
-    public float castSpeedBonus = 0.2f;
-    public float shuffleSpeedBonus = 0.2f;
-    public float moveSpeedBonus = .2f;
+    private const int CAST_SPEED_INDEX = 0;
+    private const int SHUFFLE_SPEED_INDEX = 1;
+    private const int MOVE_SPEED_INDEX = 2;
+
     protected override void Start()
     {
         base.Start();
@@ -17,37 +18,37 @@ public class Haste : Effect
     protected override void OnEffectEnd()
     {
         if (targetBody == null) return;
+
         var player = targetBody as Player;
         if (player != null)
         {
-            player.moveSpeedMultiplier -= moveSpeedBonus * stacks;
-            player.shuffleSpeedMultiplier -= shuffleSpeedBonus * stacks;
-            player.castSpeedMultiplier -= castSpeedBonus * stacks;
+            player.moveSpeedMultiplier -= config.StatModifiers[MOVE_SPEED_INDEX] * stacks;
+            player.shuffleSpeedMultiplier -= config.StatModifiers[SHUFFLE_SPEED_INDEX] * stacks;
+            player.castSpeedMultiplier -= config.StatModifiers[CAST_SPEED_INDEX] * stacks;
             player.SetStats();
+            print("Haste effect ended, removing speed bonuses.");
         }
         else
         {
-            targetBody.moveSpeedMultiplier -= moveSpeedBonus * stacks;
+            targetBody.moveSpeedMultiplier -= config.StatModifiers[MOVE_SPEED_INDEX] * stacks;
             targetBody.SetStats();
         }
     }
     void AddHaste()
     {
-        // Check if targetBody exists first
         if (targetBody == null) return;
 
-        // Store original values and apply new ones if properties exist
         var player = targetBody as Player;
         if (player != null)
         {
-            player.moveSpeedMultiplier += moveSpeedBonus;
-            player.shuffleSpeedMultiplier += shuffleSpeedBonus;
-            player.castSpeedMultiplier += castSpeedBonus;
+            player.moveSpeedMultiplier += config.StatModifiers[MOVE_SPEED_INDEX] * stacks;
+            player.shuffleSpeedMultiplier += config.StatModifiers[SHUFFLE_SPEED_INDEX] * stacks;
+            player.castSpeedMultiplier += config.StatModifiers[CAST_SPEED_INDEX] * stacks;
             player.SetStats();
         }
         else 
         {
-            targetBody.moveSpeedMultiplier += moveSpeedBonus;
+            targetBody.moveSpeedMultiplier += config.StatModifiers[MOVE_SPEED_INDEX] * stacks;
             targetBody.SetStats();
         }
     }

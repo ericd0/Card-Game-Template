@@ -284,11 +284,7 @@ public class GameManager : MonoBehaviour
                         {
                             if (effectPrefab != null)
                             {
-                                Effect effect = currentPlayer.gameObject.AddComponent(effectPrefab.GetType()) as Effect;
-                                if (effect != null)
-                                {
-                                    JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(effectPrefab), effect);
-                                }
+                                Effect.CreateEffect(currentPlayer.gameObject, effectPrefab);
                             }
                         }
                     }

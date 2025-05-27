@@ -42,7 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -319,7 +320,7 @@ MonoBehaviour:
   startingDecks:
   - {fileID: 11400000, guid: 11775f403edfa4babb9e45279cdae7f8, type: 2}
   - {fileID: 11400000, guid: 32a50b48e69d8fc408e892ab55904eda, type: 2}
-  selectedDeckIndex: 0
+  selectedDeckIndex: 1
   handSize: 5
   slimePrefab: {fileID: 4093534973121695392, guid: 623ac1de69afc4b7db34538cb6aab3da, type: 3}
 --- !u!114 &740367710

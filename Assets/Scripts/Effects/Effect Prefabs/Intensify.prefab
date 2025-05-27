@@ -44,8 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a625c3630ab236f438f72eb6fc7ec46a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseDuration: 0
-  canStack: 1
+  config: {fileID: 11400000, guid: 5f5512c77bf6aa54c9d6b6c9fc5b0475, type: 2}
   damageMultiplier: 0.25
   speedMultiplier: 0.2
   sizeMultiplier: 0.5

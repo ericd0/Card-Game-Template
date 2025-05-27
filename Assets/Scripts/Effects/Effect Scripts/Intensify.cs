@@ -2,17 +2,14 @@ using UnityEngine;
 
 public class Intensify : Effect
 {
-    [Header("Intensify Effect Settings")]
-    [Tooltip("Already accounts for stacks and initial amount.")]
-    public float damageMultiplier;
-    public float speedMultiplier;
-    public float sizeMultiplier;
+    // Using indices for clarity
+    private const int DAMAGE_INDEX = 0;
+    private const int SPEED_INDEX = 1;
+    private const int SIZE_INDEX = 2;
 
     protected override void Start()
     {
         base.Start();
-        canStack = true;
-        duration = 0f;
     }
 
     protected override void OnEffectStart()
@@ -28,9 +25,9 @@ public class Intensify : Effect
 
     private void OnProjectileCast(Projectile projectile)
     {
-        projectile.damage *= (damageMultiplier * stacks)+1f;
-        projectile.velocity *= (speedMultiplier * stacks)+1f;
-        projectile.transform.localScale *= (sizeMultiplier *stacks)+1f;
+        projectile.damage *= (config.StatModifiers[DAMAGE_INDEX] * stacks) + 1f;
+        projectile.velocity *= (config.StatModifiers[SPEED_INDEX] * stacks) + 1f;
+        projectile.transform.localScale *= (config.StatModifiers[SIZE_INDEX] * stacks) + 1f;
         Debug.Log("Projectile intensified!");
         Destroy(this); // Remove effect after one use
     }

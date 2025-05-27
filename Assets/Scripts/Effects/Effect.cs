@@ -4,25 +4,24 @@ using UnityEngine;
 
 public abstract class Effect : MonoBehaviour
 {
-    [SerializeField] protected float baseDuration;
+    [SerializeField] protected EffectConfig config;
     protected Body targetBody;
-    
     protected float duration;
-    [SerializeField]
-    [Tooltip("Allows stacking of the effect. If false, effects are applied separately.")]
-    protected bool canStack;
-    [SerializeField]
-    [Tooltip("This only matters if canStack is false. Allows applying multiple instances of the same effect. Otherwise, duration resets if the effect is applied again.")]
-    protected bool canApplyMultiple;
     protected int stacks = 1;
-    protected float stackDuration;
+
     protected virtual void Awake()
     {
-        Debug.Log($"Awake - baseDuration: {baseDuration}");
+        if (config == null)
+        {
+            Debug.LogError($"Effect {GetType().Name} is missing configuration!");
+            Destroy(this);
+            return;
+        }
+
         targetBody = GetComponentInParent<Body>();
         if (targetBody == null)
         {
-            Debug.LogError("Effect applied to object without Body component");
+            Debug.LogError("Effects cannot be applied to an object without a Body component!");
             Destroy(this);
             return;
         }
@@ -31,14 +30,13 @@ public abstract class Effect : MonoBehaviour
         Effect existingEffect = targetBody.GetComponent(this.GetType()) as Effect;
         if (existingEffect != null && existingEffect != this)
         {
-            // If effect exists and can stack, add stack and destroy this instance
-            if (existingEffect.canStack)
+            if (existingEffect.config.CanStack)
             {
                 existingEffect.AddStack();
                 Destroy(this);
                 return;
             }
-            else if (!canApplyMultiple)
+            else if (!config.CanApplyMultiple)
             {
                 existingEffect.ResetDuration();
                 Destroy(this);
@@ -49,8 +47,7 @@ public abstract class Effect : MonoBehaviour
 
     protected virtual void Start()
     {
-        duration = baseDuration;
-        print(baseDuration);
+        duration = config.BaseDuration;
         OnEffectStart();
     }
 
@@ -72,8 +69,10 @@ public abstract class Effect : MonoBehaviour
 
     public virtual bool AddStack()
     {
-        if (!canStack) return false;
-        
+        if (!config.CanStack)
+        {
+            return false;
+        }
         stacks++;
         OnStackAdded();
         return true;
@@ -97,19 +96,18 @@ public abstract class Effect : MonoBehaviour
     }
     protected virtual void ResetDuration()
     {
-        Debug.Log($"ResetDuration - Before reset - baseDuration: {baseDuration}, duration: {duration}");
-        duration = baseDuration;
-        Debug.Log($"ResetDuration - After reset - baseDuration: {baseDuration}, duration: {duration}");
+        duration = config.BaseDuration;
+        print(duration);
     }
     protected virtual void StackDuration()
     {
-        if (duration + stackDuration < baseDuration)
+        if (duration + config.StackDuration < config.BaseDuration)
         {
-            duration = baseDuration + stackDuration;
+            duration = config.BaseDuration + config.StackDuration;
         }
         else
         {
-            duration += stackDuration;
+            duration += config.StackDuration;
         }
     }
     public virtual void Initialize(float damage)
@@ -120,10 +118,43 @@ public abstract class Effect : MonoBehaviour
     public static bool TryStack<T>(GameObject target) where T : Effect
     {
         T existingEffect = target.GetComponent<T>();
-        if (existingEffect != null && existingEffect.canStack)
+        if (existingEffect != null && existingEffect.config.CanStack)
         {
             return existingEffect.AddStack();
         }
         return false;
+    }
+
+    public static T CreateEffect<T>(GameObject target, T prefab) where T : Effect
+    {
+        if (prefab == null)
+        {
+            Debug.LogError($"Prefab is null when trying to create effect of type {typeof(T)}");
+            return null;
+        }
+
+        // Temporarily disable the target GameObject
+        bool wasActive = target.activeSelf;
+        target.SetActive(false);
+
+        // Get the concrete type and create component
+        System.Type effectType = prefab.GetType();
+        T effect = (T)target.AddComponent(effectType);
+        
+        if (effect != null)
+        {
+            // Copy the config before enabling
+            effect.config = prefab.config;
+            
+            // Re-enable and return
+            target.SetActive(wasActive);
+            return effect;
+        }
+        else
+        {
+            Debug.LogError($"Failed to create effect of type {effectType}");
+            target.SetActive(wasActive);
+            return null;
+        }
     }
 }

@@ -60,10 +60,11 @@ public abstract class Projectile : Card
         {
             if (effectPrefab != null)
             {
-                Effect effect = target.gameObject.AddComponent(effectPrefab.GetType()) as Effect;
+                // Get the concrete type and create that
+                var effect = Effect.CreateEffect(target.gameObject, effectPrefab);
                 if (effect != null)
                 {
-                    effect.Initialize(damage); // Pass the projectile's damage
+                    effect.Initialize(damage);
                 }
             }
         }
