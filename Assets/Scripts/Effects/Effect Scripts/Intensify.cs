@@ -14,13 +14,13 @@ public class Intensify : Effect
 
     protected override void OnEffectStart()
     {
-        GameManager.OnProjectileCast += OnProjectileCast;
+        DeckManager.OnProjectileCast += OnProjectileCast;
         Debug.Log("Intensify effect active for next projectile!");
     }
 
     protected override void OnEffectEnd()
     {
-        GameManager.OnProjectileCast -= OnProjectileCast;
+        DeckManager.OnProjectileCast -= OnProjectileCast;
     }
 
     private void OnProjectileCast(Projectile projectile)
@@ -34,6 +34,6 @@ public class Intensify : Effect
 
     private void OnDestroy()
     {
-        GameManager.OnProjectileCast -= OnProjectileCast;
+        DeckManager.OnProjectileCast -= OnProjectileCast;
     }
 }

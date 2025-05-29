@@ -36,7 +36,7 @@ public class Player : Body
         {
             Move();
             RotateTowardsMouse();
-            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) 
+            if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
                 && Time.time >= lastDashTime + dashCooldown)
             {
                 StartCoroutine(Dash());
@@ -137,6 +137,6 @@ public class Player : Body
 
     void PlaySelectedCard()
     {
-        GameManager.gm.PlayCard();
+        DeckManager.dm.PlayCard();
     }
 }

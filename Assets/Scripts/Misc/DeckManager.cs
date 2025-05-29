@@ -5,9 +5,9 @@ using System.Linq;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class DeckManager : MonoBehaviour
 {
-    public static GameManager gm;
+    public static DeckManager dm;
     public GameObject playerPrefab; // Assign in inspector
     private Player currentPlayer;
     
@@ -40,13 +40,13 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (gm != null && gm != this)
+        if (dm != null && dm != this)
         {
             Destroy(gameObject);
         }
         else
         {
-            gm = this;
+            dm = this;
             DontDestroyOnLoad(this.gameObject);
         }
     }

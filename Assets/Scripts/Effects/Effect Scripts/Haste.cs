@@ -12,7 +12,7 @@ public class Haste : Effect
     }
     protected override void OnEffectStart()
     {
-        AddHaste();
+        ApplyHaste();
     }
 
     protected override void OnEffectEnd()
@@ -34,28 +34,27 @@ public class Haste : Effect
             targetBody.SetStats();
         }
     }
-    void AddHaste()
+    void ApplyHaste()
     {
         if (targetBody == null) return;
 
         var player = targetBody as Player;
         if (player != null)
         {
-            player.moveSpeedMultiplier += config.StatModifiers[MOVE_SPEED_INDEX] * stacks;
-            player.shuffleSpeedMultiplier += config.StatModifiers[SHUFFLE_SPEED_INDEX] * stacks;
-            player.castSpeedMultiplier += config.StatModifiers[CAST_SPEED_INDEX] * stacks;
+            player.moveSpeedMultiplier += config.StatModifiers[MOVE_SPEED_INDEX];
+            player.shuffleSpeedMultiplier += config.StatModifiers[SHUFFLE_SPEED_INDEX];
+            player.castSpeedMultiplier += config.StatModifiers[CAST_SPEED_INDEX];
             player.SetStats();
         }
         else 
         {
-            targetBody.moveSpeedMultiplier += config.StatModifiers[MOVE_SPEED_INDEX] * stacks;
+            targetBody.moveSpeedMultiplier += config.StatModifiers[MOVE_SPEED_INDEX];
             targetBody.SetStats();
         }
     }
     protected override void OnStackAdded()
     {
-        AddHaste();
+        ApplyHaste();
         ResetDuration();
     }
-
 }
